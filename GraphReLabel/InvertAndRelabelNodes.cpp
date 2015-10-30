@@ -2,11 +2,15 @@
 #include "InvertAndRelabelNodes.h"
 
 
-InvertAndRelabelNodes::InvertAndRelabelNodes()
+InvertAndRelabelNodes::InvertAndRelabelNodes(char * file_name, uint32 buffer_size)
+{
+
+}
+
+InvertAndRelabelNodes::~InvertAndRelabelNodes()
 {
 }
 
-
-InvertAndRelabelNodes::~InvertAndRelabelNodes()
+void InvertAndRelabelNodes::execute()
 {
 }

@@ -7,9 +7,11 @@
 #include <chrono>
 #include <windows.h>
 #include <psapi.h>
-#include "include.h"
 #include <string>
 #include <Windows.h>
+#include "include.h"
+#include "InvertAndRelabelNeighbours.h"
+#include "InvertAndRelabelNodes.h"
 
 #define BUFFERSIZE 496
 
@@ -35,6 +37,11 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
 
     std::chrono::high_resolution_clock::time_point b1 = std::chrono::high_resolution_clock::now();
     {
+        InvertAndRelabelNodes graph(argv[1], buffer_size);
+        graph.execute();
+        printf("Total IO: read - %.2f GB; write - %.2f GB\n", (float)graph.total_read / _1_GB, (float)graph.total_write / _1_GB);
+        total_read += (float)graph.total_read;
+        total_write += (float)graph.total_write;
     }
     std::chrono::high_resolution_clock::time_point e1 = std::chrono::high_resolution_clock::now();
     printf("Took %lld seconds\n", std::chrono::duration_cast<std::chrono::seconds>(e1 - b1).count());
