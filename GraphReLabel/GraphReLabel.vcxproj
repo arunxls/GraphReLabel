@@ -144,6 +144,10 @@
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="FileWriter.h" />
     <ClInclude Include="include.h" />
+    <ClInclude Include="InvertAndRelabelNeighbours.h" />
+    <ClInclude Include="InvertAndRelabelNodes.h" />
+    <ClInclude Include="OriginalEightByteHashes.h" />
+    <ClInclude Include="OriginalGraphReader.h" />
     <ClInclude Include="print.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -153,6 +157,10 @@
     <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="FileWriter.cpp" />
     <ClCompile Include="GraphReLabel.cpp" />
+    <ClCompile Include="InvertAndRelabelNeighbours.cpp" />
+    <ClCompile Include="InvertAndRelabelNodes.cpp" />
+    <ClCompile Include="OriginalEightByteHashes.cpp" />
+    <ClCompile Include="OriginalGraphReader.cpp" />
     <ClCompile Include="print.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
