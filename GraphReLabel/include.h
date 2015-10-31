@@ -7,3 +7,12 @@
 typedef unsigned __int64 uint64;
 typedef unsigned __int32 uint32;
 typedef unsigned short   ushort;
+
+#pragma pack(push,1) // change struct packing to 1 byte
+template <typename T1>
+class OriginalHeaderGraph {
+public:
+    T1 hash;
+    uint32 len;
+};
+#pragma pack(pop)

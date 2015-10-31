@@ -76,7 +76,7 @@ void FileReader::readFile(char* filename, LPVOID buffer, OVERLAPPED& ol, uint32&
         printf("Terminal failure: Unable to read from file.\n GetLastError=%08x\n", GetLastError());
         return;
     }
-    SleepEx(50000, TRUE);
+    SleepEx(5000, TRUE);
     dwBytesRead = ol.InternalHigh;
 }
 
@@ -87,7 +87,7 @@ HANDLE FileReader::getFileHandle()
         0,       // exclusive reading
         NULL,                  // default security
         OPEN_EXISTING,         // existing file only
-        FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, // normal file
+        FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED | FILE_FLAG_NO_BUFFERING, // normal file
         NULL);
 
     if (hFile == INVALID_HANDLE_VALUE)
@@ -97,7 +97,7 @@ HANDLE FileReader::getFileHandle()
             FILE_SHARE_READ,       // share for reading
             NULL,                  // default security
             OPEN_EXISTING,         // existing file only
-            FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, // normal file
+            FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED | FILE_FLAG_NO_BUFFERING, // normal file
             NULL);
         if (DEBUG && hFile == INVALID_HANDLE_VALUE) {
             _tprintf("Terminal failure: unable to open file \"%s\" for read.\n", this->filename);

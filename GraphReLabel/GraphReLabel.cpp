@@ -38,8 +38,8 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
         InvertAndRelabelNodes<uint64, uint64> graph(argv[1], BUFFERSIZE, true);
         graph.execute();
         printf("Total IO: read - %.2f GB; write - %.2f GB\n", (float)graph.total_read / _1_GB, (float)graph.total_write / _1_GB);
-        total_read += (float)graph.total_read;
-        total_write += (float)graph.total_write;
+        total_read += graph.total_read;
+        total_write += graph.total_write;
     }
     std::chrono::high_resolution_clock::time_point e1 = std::chrono::high_resolution_clock::now();
     printf("Took %lld seconds\n", std::chrono::duration_cast<std::chrono::seconds>(e1 - b1).count());
