@@ -147,7 +147,7 @@
     <ClInclude Include="HashManager.h" />
     <ClInclude Include="include.h" />
     <ClInclude Include="InvertAndRelabelNodes.h" />
-    <ClInclude Include="OriginalEightByteHashes.h" />
+    <ClInclude Include="OriginalNodeHash.h" />
     <ClInclude Include="print.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -160,7 +160,7 @@
     <ClCompile Include="GraphReLabel.cpp" />
     <ClCompile Include="HashManager.cpp" />
     <ClCompile Include="InvertAndRelabelNodes.cpp" />
-    <ClCompile Include="OriginalEightByteHashes.cpp" />
+    <ClCompile Include="OriginalNodeHash.cpp" />
     <ClCompile Include="print.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

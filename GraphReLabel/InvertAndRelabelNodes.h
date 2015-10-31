@@ -13,7 +13,6 @@ public:
     uint32 total_read;
     uint32 total_write;
 
-    char* file_name;
     GraphReader<T1, T2>* graph;
     //HashManager* hashManager;
 

@@ -8,8 +8,9 @@ InvertAndRelabelNodes<T1, T2>::InvertAndRelabelNodes(char * file_name, uint32 bu
     this->total_read = 0;
     this->total_write = 0;
 
-    this->file_name = file_name;
-    this->graph = new GraphReader<T1, T2>();
+    this->graph = new GraphReader<T1, T2>(file_name, createNodeHash);
+    buffer_size -= graph->size();
+
 }
 
 template <typename T1, typename T2>

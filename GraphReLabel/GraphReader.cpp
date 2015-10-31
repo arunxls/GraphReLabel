@@ -2,6 +2,15 @@
 #include "GraphReader.h"
 
 template <typename T1, typename T2>
+GraphReader<T1, T2>::GraphReader(char * file_name, bool createNodeHash) 
+{
+    if (createNodeHash)
+    {
+
+    }
+}
+
+template <typename T1, typename T2>
 GraphReader<T1, T2>::GraphReader()
 {
 }
