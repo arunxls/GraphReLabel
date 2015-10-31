@@ -2,6 +2,7 @@
 
 #include "include.h"
 #include "FileReader.h"
+#include "OriginalNodeHash.h"
 
 #define ORIGINAL_NODE_HASH 2
 #define GRAPH_READ_BUFFER 32
@@ -12,6 +13,7 @@ class GraphReader
 public:
     bool createNodeHash;
     FileReader* FR;
+    OriginalNodeHash<T1> *nodeHash;
 
     GraphReader(char * file_name, bool createNodeHash);
     GraphReader();

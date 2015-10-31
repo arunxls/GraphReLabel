@@ -6,7 +6,7 @@ GraphReader<T1, T2>::GraphReader(char * file_name, bool createNodeHash)
 {
     if (createNodeHash)
     {
-
+        //this->
     }
 }
 

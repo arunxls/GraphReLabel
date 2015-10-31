@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "OriginalNodeHash.h"
 
-
-OriginalNodeHash::OriginalNodeHash()
+template <typename T>
+OriginalNodeHash<T>::OriginalNodeHash()
 {
 }
 
-
-OriginalNodeHash::~OriginalNodeHash()
+template <typename T>
+OriginalNodeHash<T>::~OriginalNodeHash()
 {
 }
