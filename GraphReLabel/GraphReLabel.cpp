@@ -10,8 +10,8 @@
 #include <string>
 #include <Windows.h>
 #include "include.h"
-#include "InvertAndRelabelNeighbours.h"
 #include "InvertAndRelabelNodes.h"
+#include "InvertAndRelabelNodes.cpp"
 
 #define BUFFERSIZE 496
 
@@ -28,8 +28,6 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
     uint64 total_read = 0;
     uint64 total_write = 0;
 
-    uint32 buffer_size = BUFFERSIZE * _1_MB;
-    
     clock_t begin, end;
 
     printf("Starting split phase\n");
@@ -37,7 +35,7 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
 
     std::chrono::high_resolution_clock::time_point b1 = std::chrono::high_resolution_clock::now();
     {
-        InvertAndRelabelNodes graph(argv[1], buffer_size);
+        InvertAndRelabelNodes<uint64, uint64> graph(argv[1], BUFFERSIZE, true);
         graph.execute();
         printf("Total IO: read - %.2f GB; write - %.2f GB\n", (float)graph.total_read / _1_GB, (float)graph.total_write / _1_GB);
         total_read += (float)graph.total_read;

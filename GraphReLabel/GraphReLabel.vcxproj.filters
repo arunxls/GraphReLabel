@@ -39,16 +39,16 @@
     <ClInclude Include="print.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OriginalGraphReader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OriginalEightByteHashes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InvertAndRelabelNodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InvertAndRelabelNeighbours.h">
+    <ClInclude Include="HashManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,16 +71,16 @@
     <ClCompile Include="print.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OriginalGraphReader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="OriginalEightByteHashes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InvertAndRelabelNodes.cpp">
+    <ClCompile Include="HashManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InvertAndRelabelNeighbours.cpp">
+    <ClCompile Include="GraphReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InvertAndRelabelNodes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
