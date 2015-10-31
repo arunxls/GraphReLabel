@@ -4,7 +4,6 @@
 #include "FileReader.h"
 #include "OriginalNodeHash.h"
 
-#define ORIGINAL_NODE_HASH 2
 #define GRAPH_READ_BUFFER 32
 
 template <typename T1, typename T2>
@@ -19,6 +18,6 @@ public:
     GraphReader();
     ~GraphReader();
 
-    uint32 size() { return this->createNodeHash ? ORIGINAL_NODE_HASH + GRAPH_READ_BUFFER : GRAPH_READ_BUFFER; }
+    uint32 size() { return this->createNodeHash ? this->nodeHash->size() + GRAPH_READ_BUFFER : GRAPH_READ_BUFFER; }
 };
 

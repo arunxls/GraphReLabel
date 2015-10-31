@@ -3,8 +3,6 @@
 #include "GraphReader.h"
 #include "HashManager.h"
 
-#define ORIGINAL_GRAPH_READER_SIZE 34
-
 template <typename T1, typename T2>
 class InvertAndRelabelNodes
 {
