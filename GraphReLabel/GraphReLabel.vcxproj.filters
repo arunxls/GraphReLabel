@@ -54,6 +54,9 @@
     <ClInclude Include="RenamedGraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RenamedNodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -87,6 +90,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RenamedGraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenamedNodes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -16,4 +16,11 @@ public:
     T hash;
     uint32 len;
 };
+
+template <typename T1, typename T2>
+class RenamedHeaderGraph {
+    T1 old;
+    uint32 len;
+    T2 renamed;
+};
 #pragma pack(pop)

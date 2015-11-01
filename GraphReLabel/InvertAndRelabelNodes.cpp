@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "InvertAndRelabelNodes.h"
 #include "GraphReader.cpp"
+#include "RenamedNodes.cpp"
+#include "RenamedGraphManager.cpp"
 
 template <typename T1, typename T2>
 InvertAndRelabelNodes<T1, T2>::InvertAndRelabelNodes(char * file_name, uint32 buffer_size, bool createNodeHash)
@@ -11,7 +13,8 @@ InvertAndRelabelNodes<T1, T2>::InvertAndRelabelNodes(char * file_name, uint32 bu
     this->graph = new GraphReader<T1, T2>(file_name, createNodeHash);
     buffer_size -= graph->size();
 
-    this->renamedGraphManager = new RenamedGraphManager
+    this->currentRenameCount = T2();
+    //this->renamedGraphManager = new RenamedGraphManager();
 }
 
 template <typename T1, typename T2>
@@ -23,9 +26,16 @@ template <typename T1, typename T2>
 void InvertAndRelabelNodes<T1, T2>::execute()
 {
     while (this->graph->has_next()) {
-        this->hashes->put(this->graph->current());
+        T2 renamed = this->getRenamed(this->graph->current());
+        this->renamedGraphManager->put(renamed, this->graph->current());
         this->graph->next();
     }
 
-    //hashes->dumpToNewFile();
+    //renamedGraphManager->dumpToNewFile();
+}
+
+template<typename T1, typename T2>
+T2 InvertAndRelabelNodes<T1, T2>::getRenamed(T1 element)
+{
+    return this->currentRenameCount++;
 }

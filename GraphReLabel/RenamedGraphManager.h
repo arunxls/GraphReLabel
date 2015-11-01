@@ -10,5 +10,7 @@ public:
     RenamedGraphManager(uint32 buffer_size);
     RenamedGraphManager();
     ~RenamedGraphManager();
+
+    void put(T2 renamed, T1 original);
 };
 
