@@ -11,7 +11,7 @@ GraphReader<T1, T2>::GraphReader(char * file_name, bool createNodeHash)
     this->length = 0;
 
     //Save some extra buffer space for partial reads
-    uint32 extra_buffer = sizeof(OriginalHeaderGraph<T1>) + sizeof(T2);
+    uint32 extra_buffer = sizeof(HeaderGraph<T1>) + sizeof(T2);
     this->buffer_start = new char[GRAPH_READ_BUFFER*_1_MB + extra_buffer];
     
     this->buffer_start = this->buffer_start + extra_buffer;
@@ -29,7 +29,7 @@ GraphReader<T1, T2>::GraphReader()
 template <typename T1, typename T2>
 GraphReader<T1, T2>::~GraphReader()
 {
-    delete[](this->buffer_start - sizeof(OriginalHeaderGraph<T1>));
+    delete[](this->buffer_start - sizeof(HeaderGraph<T1>));
 }
 
 template<typename T1, typename T2>
@@ -54,7 +54,7 @@ T2 GraphReader<T1, T2>::current()
         this->start = this->buffer_start;
     }
 
-    uint32 sizeToRead = this->length == 0 ? sizeof(OriginalHeaderGraph<T1>) + sizeof(T2) : sizeof(T2);
+    uint32 sizeToRead = this->length == 0 ? sizeof(HeaderGraph<T1>) + sizeof(T2) : sizeof(T2);
 
     if (this->start + sizeToRead > this->end)
     {
@@ -67,9 +67,9 @@ T2 GraphReader<T1, T2>::current()
 
     if (this->length == 0)
     {
-        this->nodeHash->put(((OriginalHeaderGraph<T1>*) this->start)->hash);
-        this->length = ((OriginalHeaderGraph<T1>*) this->start)->len;
-        this->start += sizeof(OriginalHeaderGraph<T1>);
+        this->nodeHash->put(((HeaderGraph<T1>*) this->start)->hash);
+        this->length = ((HeaderGraph<T1>*) this->start)->len;
+        this->start += sizeof(HeaderGraph<T1>);
     }
 
     return *(T2*) this->start;

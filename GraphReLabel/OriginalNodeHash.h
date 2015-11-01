@@ -23,6 +23,7 @@ public:
     ~OriginalNodeHash();
 
     void put(T element);
+    void writeToDisk();
 
     uint32 size() { return ORIGINAL_NODE_HASH; }
 };

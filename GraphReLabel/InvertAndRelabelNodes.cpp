@@ -11,6 +11,7 @@ InvertAndRelabelNodes<T1, T2>::InvertAndRelabelNodes(char * file_name, uint32 bu
     this->graph = new GraphReader<T1, T2>(file_name, createNodeHash);
     buffer_size -= graph->size();
 
+    this->renamedGraphManager = new RenamedGraphManager
 }
 
 template <typename T1, typename T2>
@@ -22,8 +23,7 @@ template <typename T1, typename T2>
 void InvertAndRelabelNodes<T1, T2>::execute()
 {
     while (this->graph->has_next()) {
-        //hashes->put(graph->current());
-        this->graph->current();
+        this->hashes->put(this->graph->current());
         this->graph->next();
     }
 

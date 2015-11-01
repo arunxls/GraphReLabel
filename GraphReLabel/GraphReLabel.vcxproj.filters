@@ -42,13 +42,13 @@
     <ClInclude Include="InvertAndRelabelNodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HashManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GraphReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OriginalNodeHash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenamedGraphManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,9 +71,6 @@
     <ClCompile Include="print.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HashManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GraphReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -81,6 +78,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OriginalNodeHash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenamedGraphManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -144,11 +144,11 @@
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="FileWriter.h" />
     <ClInclude Include="GraphReader.h" />
-    <ClInclude Include="HashManager.h" />
     <ClInclude Include="include.h" />
     <ClInclude Include="InvertAndRelabelNodes.h" />
     <ClInclude Include="OriginalNodeHash.h" />
     <ClInclude Include="print.h" />
+    <ClInclude Include="RenamedGraphManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="utils.h" />
@@ -158,10 +158,10 @@
     <ClCompile Include="FileWriter.cpp" />
     <ClCompile Include="GraphReader.cpp" />
     <ClCompile Include="GraphReLabel.cpp" />
-    <ClCompile Include="HashManager.cpp" />
     <ClCompile Include="InvertAndRelabelNodes.cpp" />
     <ClCompile Include="OriginalNodeHash.cpp" />
     <ClCompile Include="print.cpp" />
+    <ClCompile Include="RenamedGraphManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

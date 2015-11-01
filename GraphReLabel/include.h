@@ -10,16 +10,10 @@ typedef __int32 int32;
 typedef unsigned short   ushort;
 
 #pragma pack(push,1) // change struct packing to 1 byte
-template <typename T1>
-class OriginalHeaderGraph {
-public:
-    T1 hash;
-    uint32 len;
-};
-
+template <typename T>
 class HeaderGraph {
 public:
-    uint64 hash;
+    T hash;
     uint32 len;
 };
 #pragma pack(pop)
