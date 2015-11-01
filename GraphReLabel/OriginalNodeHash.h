@@ -5,7 +5,6 @@
 
 #define ORIGINAL_NODE_HASH 2
 
-template <typename T>
 class OriginalNodeHash
 {
 public:
@@ -22,7 +21,7 @@ public:
     OriginalNodeHash();
     ~OriginalNodeHash();
 
-    void put(T element);
+    void put(uint32 element);
     void writeToDisk();
 
     uint32 size() { return ORIGINAL_NODE_HASH; }

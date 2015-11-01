@@ -6,7 +6,7 @@
 
 #define GRAPH_READ_BUFFER 32
 
-template <typename T1, typename T2>
+template <typename T>
 class GraphReader
 {
 public:
@@ -17,7 +17,7 @@ public:
 
     bool createNodeHash;
     FileReader* FR;
-    OriginalNodeHash<T1> *nodeHash;
+    OriginalNodeHash *nodeHash;
 
     GraphReader(char * file_name, bool createNodeHash);
     GraphReader();
@@ -26,7 +26,7 @@ public:
     uint32 size() { return this->createNodeHash ? this->nodeHash->size() + GRAPH_READ_BUFFER : GRAPH_READ_BUFFER; }
     bool has_next();
     void next();
-    T2 current();
+    T current();
 private:
     uint32 length;
     void load();

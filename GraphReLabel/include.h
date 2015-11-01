@@ -17,10 +17,11 @@ public:
     uint32 len;
 };
 
-template <typename T1, typename T2>
+template <typename T>
 class RenamedHeaderGraph {
-    T1 old;
+public:
+    T old;
     uint32 len;
-    T2 renamed;
+    uint32 renamed;
 };
 #pragma pack(pop)

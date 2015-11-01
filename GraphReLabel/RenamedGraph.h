@@ -2,12 +2,17 @@
 
 #include "include.h"
 
-template <typename T1, typename T2>
+template <typename T>
 class RenamedGraph
 {
 public:
-    RenamedGraph(uint32 buffer_size);
+    char* buffer_start;
+    char* buffer_end;
+    char* start;
+    char* end;
+
     RenamedGraph();
     ~RenamedGraph();
+    void init(uint32 buffer_size);
 };
 

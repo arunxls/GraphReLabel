@@ -1,16 +1,19 @@
 #pragma once
 #include "include.h"
+#include "RenamedGraph.h"
 
 #define RENAME_BUCKETS 4
 
-template <typename T1, typename T2>
+template <typename T>
 class RenamedGraphManager
 {
 public:
+    RenamedGraph<T>* bucket;
+
     RenamedGraphManager(uint32 buffer_size);
     RenamedGraphManager();
     ~RenamedGraphManager();
 
-    void put(T2 renamed, T1 original);
+    void put(uint32 renamed, T original);
 };
 

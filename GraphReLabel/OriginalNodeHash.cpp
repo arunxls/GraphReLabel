@@ -2,8 +2,7 @@
 #include "OriginalNodeHash.h"
 #include "utils.h"
 
-template <typename T>
-OriginalNodeHash<T>::OriginalNodeHash()
+OriginalNodeHash::OriginalNodeHash()
 {
     this->buffer_start = new char[ORIGINAL_NODE_HASH * _1_MB];
     this->buffer_end = this->buffer_start + ORIGINAL_NODE_HASH * _1_MB;
@@ -17,24 +16,21 @@ OriginalNodeHash<T>::OriginalNodeHash()
     this->FW = new FileWriter(getNewOutputFile());
 }
 
-template <typename T>
-OriginalNodeHash<T>::~OriginalNodeHash()
+OriginalNodeHash::~OriginalNodeHash()
 {
 }
 
-template<typename T>
-void OriginalNodeHash<T>::put(T element)
+void OriginalNodeHash::put(uint32 element)
 {
-    if (this->start + sizeof(T) > this->end) {
+    if (this->start + sizeof(uint32) > this->end) {
         this->writeToDisk();
     }
 
-    *(T*) this->start = element;
-    this->start += sizeof(T);
+    *(uint32*) this->start = element;
+    this->start += sizeof(uint32);
 }
 
-template<typename T>
-void OriginalNodeHash<T>::writeToDisk()
+void OriginalNodeHash::writeToDisk()
 {
     this->FW->write(this->buffer_start, (this->start - this->buffer_start));
     this->start = this->buffer_start;
