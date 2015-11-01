@@ -148,6 +148,7 @@
     <ClInclude Include="InvertAndRelabelNodes.h" />
     <ClInclude Include="OriginalNodeHash.h" />
     <ClInclude Include="print.h" />
+    <ClInclude Include="RenamedGraph.h" />
     <ClInclude Include="RenamedGraphManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -161,6 +162,7 @@
     <ClCompile Include="InvertAndRelabelNodes.cpp" />
     <ClCompile Include="OriginalNodeHash.cpp" />
     <ClCompile Include="print.cpp" />
+    <ClCompile Include="RenamedGraph.cpp" />
     <ClCompile Include="RenamedGraphManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

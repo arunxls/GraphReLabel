@@ -1,6 +1,8 @@
 #pragma once
 #include "include.h"
 
+#define RENAME_BUCKETS 4
+
 template <typename T1, typename T2>
 class RenamedGraphManager
 {
