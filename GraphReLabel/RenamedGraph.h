@@ -14,5 +14,8 @@ public:
     RenamedGraph();
     ~RenamedGraph();
     void init(uint32 buffer_size);
+    bool hasNext();
+    void put(RenamedHeaderGraph<T>* element);
+    void sort();
 };
 

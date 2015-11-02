@@ -14,7 +14,7 @@ InvertAndRelabelNodes<T>::InvertAndRelabelNodes(char * file_name, uint32 buffer_
     buffer_size -= graph->size();
 
     this->currentRenameCount = 0;
-    //this->renamedGraphManager = new RenamedGraphManager();
+    this->renamedGraphManager = new RenamedGraphManager<T>(buffer_size);
 }
 
 template <typename T>
@@ -26,10 +26,13 @@ template <typename T>
 void InvertAndRelabelNodes<T>::execute()
 {
     while (this->graph->has_next()) {
-        uint32 renamed = this->getRenamed(this->graph->current());
-        this->renamedGraphManager->put(renamed, this->graph->current());
+        T element = this->graph->current();
+        uint32 renamed = this->getRenamed(element);
+        this->renamedGraphManager->put(renamed, element);
         this->graph->next();
     }
+
+    printf("%I64u\n", this->graph->count);
 
     //renamedGraphManager->dumpToNewFile();
 }

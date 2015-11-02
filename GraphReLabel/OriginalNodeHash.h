@@ -21,7 +21,7 @@ public:
     OriginalNodeHash();
     ~OriginalNodeHash();
 
-    void put(uint32 element);
+    void put(uint64 element);
     void writeToDisk();
 
     uint32 size() { return ORIGINAL_NODE_HASH; }

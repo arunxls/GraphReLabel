@@ -35,7 +35,7 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
 
     std::chrono::high_resolution_clock::time_point b1 = std::chrono::high_resolution_clock::now();
     {
-        InvertAndRelabelNodes<uint64> graph(argv[1], BUFFERSIZE, true);
+        InvertAndRelabelNodes<uint64> graph(argv[1], BUFFERSIZE * _1_MB, true);
         graph.execute();
         printf("Total IO: read - %.2f GB; write - %.2f GB\n", (float)graph.total_read / _1_GB, (float)graph.total_write / _1_GB);
         total_read += graph.total_read;

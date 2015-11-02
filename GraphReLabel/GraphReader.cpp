@@ -66,6 +66,7 @@ T GraphReader<T>::current()
 
     if (this->length == 0)
     {
+        this->count++;
         this->nodeHash->put(((HeaderGraph<T>*) this->start)->hash);
         this->length = ((HeaderGraph<T>*) this->start)->len;
         this->start += sizeof(HeaderGraph<T>);

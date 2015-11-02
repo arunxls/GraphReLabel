@@ -23,5 +23,10 @@ public:
     T old;
     uint32 len;
     uint32 renamed;
+
+    bool operator<(const RenamedHeaderGraph<T>& a) const
+    {
+        return old < a.old;
+    }
 };
 #pragma pack(pop)

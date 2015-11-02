@@ -20,14 +20,14 @@ OriginalNodeHash::~OriginalNodeHash()
 {
 }
 
-void OriginalNodeHash::put(uint32 element)
+void OriginalNodeHash::put(uint64 element)
 {
-    if (this->start + sizeof(uint32) > this->end) {
+    if (this->start + sizeof(uint64) > this->end) {
         this->writeToDisk();
     }
 
-    *(uint32*) this->start = element;
-    this->start += sizeof(uint32);
+    *(uint64*) this->start = element;
+    this->start += sizeof(uint64);
 }
 
 void OriginalNodeHash::writeToDisk()
