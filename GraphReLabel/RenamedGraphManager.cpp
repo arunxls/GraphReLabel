@@ -3,6 +3,7 @@
 #include "RenamedGraphManager.h"
 #include "RenamedGraph.cpp"
 #include "utils.h"
+#include "FileWriter.h"
 
 template<typename T>
 RenamedGraphManager<T>::RenamedGraphManager(uint32 buffer_size)
@@ -41,7 +42,7 @@ DWORD WINAPI RenamedGraphManager<T>::sortAndCompact(LPVOID data)
 
         RenamedGraph<T>* hCount = (RenamedGraph<T>*)data;
         hCount->sort();
-        //hCount->compact();
+        hCount->compact();
         bool flag = ReleaseSemaphore(ghWriteSemaphore, 1, NULL);
         if (DEBUG && !flag)
         {
@@ -62,17 +63,24 @@ void RenamedGraphManager<T>::put(uint32 renamed, T original)
     tmp.old = original;
 
     //Get top 2 bits
-    int key = ((original & 0xe000000000000000) >> 61);
+    int key = original  >> 61;
+    //key = key % RENAME_BUCKETS;
     RenamedGraph<T>* targetBucket = (this->bucket + key);
     if (targetBucket->hasNext()) {
         targetBucket->put(&tmp);
     }
     else {
-        for (int i = 0; i < RENAME_BUCKETS; i++) {
+        /*for (int i = 0; i < RENAME_BUCKETS; i++) {
             RenamedGraph<T>* tmp = (this->bucket + i);
             printf("%d - %d\n", i, (tmp->start - tmp->buffer_start) / sizeof(RenamedHeaderGraph<T>));
-        }
-        
+        }*/
+        //
+        //for (int i = 0; i < RENAME_BUCKETS; i++) {
+        //    RenamedGraph<T>* tmp = (this->bucket + i);
+        //    printf("%d - %d\n", i, (tmp->start - tmp->buffer_start) / sizeof(RenamedHeaderGraph<T>));
+        //}
+
+        //printf("\n------\n");
         this->writeToDisk();
     }
 }
@@ -103,10 +111,13 @@ void RenamedGraphManager<T>::writeToDisk()
         WaitForSingleObject(ghWriteSemaphore, INFINITE);
     }
 
-    /*for (int i = 0; i < RENAME_BUCKETS; ++i)
+    char* fileName = getNewOutputFile();
+    FileWriter FW(fileName);
+    for (int i = 0; i < RENAME_BUCKETS; ++i)
     {
-        (this->bucket + i)->writeToDisk(file);
-    }*/
+        FW.write((this->bucket + i)->buffer_start, (this->bucket + i)->start - (this->bucket + i)->buffer_start);
+        (this->bucket + i)->start = (this->bucket + i)->buffer_start;
+    }
 }
 
 template<typename T>

@@ -23,6 +23,7 @@ GraphReader<T>::GraphReader(char * file_name, bool createNodeHash)
 template <typename T>
 GraphReader<T>::GraphReader()
 {
+    delete[] this->buffer_start;
 }
 
 template <typename T>

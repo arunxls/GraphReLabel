@@ -17,5 +17,6 @@ public:
     bool hasNext();
     void put(RenamedHeaderGraph<T>* element);
     void sort();
+    void compact();
 };
 
