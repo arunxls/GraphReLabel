@@ -15,17 +15,12 @@ public:
     std::deque<char*> output_files;
     char* nodesHash;
 
-    GraphReader<T>* graph;
-    RenamedGraphManager<T>* renamedGraphManager;
-    RenamedNodes<T>* renamedNodes;
-
     InvertAndRelabelNodes(char* file_name, uint32 buffer_size, bool createNodeHash);
     ~InvertAndRelabelNodes();
 
     void execute();
-    uint32 getRenamed(T element);
+    uint32 getRenamed(T element, uint32& currentRenameCount);
 private:
-    uint32 currentRenameCount;
     void split();
     void merge();
 };

@@ -57,6 +57,9 @@
     <ClInclude Include="RenamedNodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RenamedGraphMergeManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -93,6 +96,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RenamedNodes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenamedGraphMergeManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
