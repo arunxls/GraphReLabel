@@ -1,6 +1,7 @@
 #pragma once
 #include "include.h"
 #include "RenamedGraph.h"
+#include <deque>
 
 #define RENAME_BUCKETS 8
 
@@ -15,6 +16,8 @@ public:
 
     uint64 total_write;
     uint64 total_read;
+
+    std::deque<char*> output_files;
 
     RenamedGraphManager(uint32 buffer_size);
     RenamedGraphManager();

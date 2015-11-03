@@ -62,7 +62,7 @@ void RenamedGraphManager<T>::put(uint32 renamed, T original)
     tmp.len = 1;
     tmp.old = original;
 
-    //Get top 2 bits
+    //Get top 3 bits
     int key = original  >> 61;
     //key = key % RENAME_BUCKETS;
     RenamedGraph<T>* targetBucket = (this->bucket + key);
@@ -112,6 +112,7 @@ void RenamedGraphManager<T>::writeToDisk()
     }
 
     char* fileName = getNewOutputFile();
+    output_files.push_back(fileName);
     FileWriter FW(fileName);
     for (int i = 0; i < RENAME_BUCKETS; ++i)
     {

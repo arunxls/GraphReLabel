@@ -25,6 +25,19 @@ InvertAndRelabelNodes<T>::~InvertAndRelabelNodes()
 template <typename T>
 void InvertAndRelabelNodes<T>::execute()
 {
+    //this->split();
+    this->merge();
+}
+
+template <typename T>
+uint32 InvertAndRelabelNodes<T>::getRenamed(T element)
+{
+    return this->currentRenameCount++;
+}
+
+template<typename T>
+void InvertAndRelabelNodes<T>::split()
+{
     while (this->graph->has_next()) {
         T element = this->graph->current();
         uint32 renamed = this->getRenamed(element);
@@ -32,13 +45,21 @@ void InvertAndRelabelNodes<T>::execute()
         this->graph->next();
     }
 
-    printf("%I64u\n", this->graph->count);
+    this->renamedGraphManager->writeToDisk();
+    this->graph->nodeHash->writeToDisk();
 
-    //renamedGraphManager->dumpToNewFile();
+    this->output_files = std::move(this->renamedGraphManager->output_files);
+    this->nodesHash = this->graph->nodeHash->FW->filename;
 }
 
-template <typename T>
-uint32 InvertAndRelabelNodes<T>::getRenamed(T element)
+template<typename T>
+void InvertAndRelabelNodes<T>::merge()
 {
-    return this->currentRenameCount++;
+    for (int i = 0; i < 64; i++) {
+        this->output_files.push_back(getNewOutputFile());
+    }
+
+
+
+    printf("\n");
 }

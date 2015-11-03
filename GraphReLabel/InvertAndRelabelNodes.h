@@ -3,6 +3,7 @@
 #include "GraphReader.h"
 #include "RenamedGraphManager.h"
 #include "RenamedNodes.h"
+#include <deque>
 
 template <typename T>
 class InvertAndRelabelNodes
@@ -10,6 +11,9 @@ class InvertAndRelabelNodes
 public:
     uint64 total_read;
     uint64 total_write;
+
+    std::deque<char*> output_files;
+    char* nodesHash;
 
     GraphReader<T>* graph;
     RenamedGraphManager<T>* renamedGraphManager;
@@ -22,4 +26,6 @@ public:
     uint32 getRenamed(T element);
 private:
     uint32 currentRenameCount;
+    void split();
+    void merge();
 };
