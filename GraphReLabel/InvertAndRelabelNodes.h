@@ -3,6 +3,7 @@
 #include "GraphReader.h"
 #include "RenamedGraphManager.h"
 #include "RenamedGraphMerge.h"
+#include "OriginalNodeHash.h"
 #include <deque>
 
 template <typename T>
@@ -22,7 +23,7 @@ public:
     ~InvertAndRelabelNodes();
 
     void execute();
-    uint32 getRenamed(uint64& element, uint32& currentRenameCount);
+    void getRenamed(uint64& element, uint32& currentRenameCount, OriginalNodeHash*);
 private:
     void split();
     void merge();

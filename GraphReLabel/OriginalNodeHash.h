@@ -24,6 +24,6 @@ public:
     void put(uint64 element);
     void writeToDisk();
 
-    uint32 size() { return ORIGINAL_NODE_HASH; }
+    uint32 size() { return ORIGINAL_NODE_HASH * _1_MB; }
 };
 

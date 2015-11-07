@@ -2,7 +2,6 @@
 
 #include "include.h"
 #include "FileReader.h"
-#include "OriginalNodeHash.h"
 
 #define GRAPH_READ_BUFFER 32
 
@@ -17,13 +16,12 @@ public:
 
     bool createNodeHash;
     FileReader* FR;
-    OriginalNodeHash *nodeHash;
 
-    GraphReader(char * file_name, bool createNodeHash);
+    GraphReader(char * file_name);
     GraphReader();
     ~GraphReader();
 
-    uint32 size() { return (this->createNodeHash ? this->nodeHash->size() + GRAPH_READ_BUFFER : GRAPH_READ_BUFFER)*_1_MB; }
+    uint32 size() { return GRAPH_READ_BUFFER*_1_MB; }
     bool has_next();
     HeaderGraph<T1, T2> currentHeader();
     T2 currentNeighbour();

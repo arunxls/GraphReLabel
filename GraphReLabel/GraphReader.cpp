@@ -2,10 +2,9 @@
 #include "GraphReader.h"
 
 template <typename T1, typename T2>
-GraphReader<T1, T2>::GraphReader(char * file_name, bool createNodeHash) 
+GraphReader<T1, T2>::GraphReader(char * file_name) 
 {
     this->createNodeHash = createNodeHash;
-    this->nodeHash = createNodeHash ? new OriginalNodeHash() : NULL;
     this->FR = new FileReader(file_name);
 
     //Save some extra buffer space for partial reads
@@ -30,7 +29,6 @@ template <typename T1, typename T2>
 GraphReader<T1, T2>::~GraphReader()
 {
     delete[] this->alloc_start;
-    //delete[](this->buffer_start - sizeof(HeaderGraph<T1, T2>));
 }
 
 template<typename T1, typename T2>
