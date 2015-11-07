@@ -5,8 +5,8 @@
 
 #define RENAME_BUCKETS 8
 
-static HANDLE ghSortSemaphore;
-static HANDLE ghWriteSemaphore;
+static HANDLE ghSortSemaphore = CreateSemaphore(NULL, 0, RENAME_BUCKETS, NULL);
+static HANDLE ghWriteSemaphore = CreateSemaphore(NULL, 0, RENAME_BUCKETS, NULL);
 
 template <typename T>
 class RenamedGraphManager

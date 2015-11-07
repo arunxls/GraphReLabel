@@ -48,16 +48,13 @@
     <ClInclude Include="OriginalNodeHash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenamedGraphManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RenamedGraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenamedNodes.h">
+    <ClInclude Include="RenamedGraphMerge.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenamedGraphMergeManager.h">
+    <ClInclude Include="RenamedGraphManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -95,10 +92,7 @@
     <ClCompile Include="RenamedGraph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RenamedNodes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RenamedGraphMergeManager.cpp">
+    <ClCompile Include="RenamedGraphMerge.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

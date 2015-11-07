@@ -6,7 +6,7 @@
 
 #define GRAPH_READ_BUFFER 32
 
-template <typename T>
+template <typename T1, typename T2>
 class GraphReader
 {
 public:
@@ -14,8 +14,6 @@ public:
     char* buffer_end;
     char* start;
     char* end;
-
-    uint64 count = 0;
 
     bool createNodeHash;
     FileReader* FR;
@@ -27,10 +25,14 @@ public:
 
     uint32 size() { return (this->createNodeHash ? this->nodeHash->size() + GRAPH_READ_BUFFER : GRAPH_READ_BUFFER)*_1_MB; }
     bool has_next();
-    void next();
-    T current();
-private:
-    uint32 length;
+    HeaderGraph<T1, T2> currentHeader();
+    T2 currentNeighbour();
+    void nextHeader();
+    void nextNeighbour();
+    uint32 remainingBuffer();
+    void copyRange(char* dst);
     void load();
+private:
+    char* alloc_start;
 };
 

@@ -2,7 +2,7 @@
 
 #define _1_MB 1000000
 #define _1_GB 1000000000
-#define DEBUG 0
+#define DEBUG 1
 
 typedef unsigned __int64 uint64;
 typedef unsigned __int32 uint32;
@@ -10,36 +10,41 @@ typedef __int32 int32;
 typedef unsigned short   ushort;
 
 #pragma pack(push,1) // change struct packing to 1 byte
-template <typename T>
+template <typename T1, typename T2>
 class HeaderGraph {
 public:
-    T hash;
+    T1 hash;
     uint32 len;
 
-    bool operator==(const HeaderGraph<T>& a) const
+    bool operator==(const HeaderGraph<T1, T2>& a) const
     {
         return hash == a.hash;
     }
 
-    HeaderGraph<T>& operator+=(const HeaderGraph<T>& rhs)
+    HeaderGraph<T1, T2>& operator+=(const HeaderGraph<T1, T2>& rhs)
     {
         uint32 tmp_len = rhs.len;
-        uint32* dst = ((uint32*)&this->len) + this->len + 1;
-        uint32* src = (uint32*)(&rhs + 1);
-        memcpy(dst, src, tmp_len*sizeof(uint32));
+        T2* dst = ((T2*)&this->len) + this->len + 1;
+        T2* src = (T2*)(&rhs + 1);
+        memcpy(dst, src, tmp_len*sizeof(T2));
         this->len += tmp_len;
         return *this;
     }
 
     uint32 size() {
-        return sizeof(HeaderGraph) + sizeof(uint32)*this->len;
+        return sizeof(HeaderGraph) + sizeof(T2)*this->len;
     }
 
-    HeaderGraph<T>& operator=(const HeaderGraph<T>& rhs)
+    HeaderGraph<T1, T2>& operator=(const HeaderGraph<T1, T2>& rhs)
     {
         hash = rhs.hash;
         len = rhs.len;
         return *this;
+    }
+
+    bool operator<(const HeaderGraph<T1, T2>& rhs)
+    {
+        return hash < rhs.hash;
     }
 };
 

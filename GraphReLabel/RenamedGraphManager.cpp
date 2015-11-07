@@ -15,9 +15,6 @@ RenamedGraphManager<T>::RenamedGraphManager(uint32 buffer_size)
         tmp->init(splitSize);
     }
 
-    ghSortSemaphore = CreateSemaphore(NULL, 0, RENAME_BUCKETS, NULL);
-    ghWriteSemaphore = CreateSemaphore(NULL, 0, RENAME_BUCKETS, NULL);
-
     this->total_read = 0;
     this->total_write = 0;
     this->init_threads();
@@ -31,6 +28,12 @@ RenamedGraphManager<T>::RenamedGraphManager()
 template <typename T>
 RenamedGraphManager<T>::~RenamedGraphManager()
 {
+    delete[] this->bucket;
+    //CloseHandle(ghSortSemaphore);
+    //CloseHandle(ghWriteSemaphore);
+    for (int i = 0; i < RENAME_BUCKETS; ++i) {
+        CloseHandle(this->hThreadArray[i]);
+    }
 }
 
 template <typename T>

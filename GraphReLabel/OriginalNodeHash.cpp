@@ -18,6 +18,7 @@ OriginalNodeHash::OriginalNodeHash()
 
 OriginalNodeHash::~OriginalNodeHash()
 {
+    delete[] this->buffer_start;
 }
 
 void OriginalNodeHash::put(uint64 element)

@@ -48,8 +48,8 @@ void RenamedGraph<T>::sort()
 template<typename T>
 void RenamedGraph<T>::compact()
 {
-    HeaderGraph<T>* prev = (HeaderGraph<T>*) this->buffer_start;
-    HeaderGraph<T>* current = (HeaderGraph<T>*) (((char*)prev) + prev->size());
+    HeaderGraph<T, uint32>* prev = (HeaderGraph<T, uint32>*) this->buffer_start;
+    HeaderGraph<T, uint32>* current = (HeaderGraph<T, uint32>*) (((char*)prev) + prev->size());
     while ((char*)current < this->start)
     {
         uint32 current_size = current->size();
@@ -59,11 +59,11 @@ void RenamedGraph<T>::compact()
             *prev += *current;
         }
         else {
-            prev = (HeaderGraph<T>*) (((char*)prev) + prev_size);
+            prev = (HeaderGraph<T, uint32>*) (((char*)prev) + prev_size);
             *prev = *current;
         }
 
-        current = (HeaderGraph<T>*) (((char*)current) + current_size);
+        current = (HeaderGraph<T, uint32>*) (((char*)current) + current_size);
     }
 
     this->start = (char*) (((char*)prev) + prev->size());
