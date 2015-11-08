@@ -20,13 +20,16 @@ FileReader::FileReader(char*& filename)
     this->offset_current_read = 0;
     this->offset_overall = 0;
 
-    this->hFile = this->getFileHandle();
+    this->getFileHandle();
     this->size = this->getFileSize();
 }
 
 FileReader::~FileReader()
 {
-    CloseHandle(this->hFile);
+    if (this->FileHandleOpen)
+    {
+        CloseHandle(this->hFile);
+    }
 }
 
 void FileReader::read(LPVOID buffer, uint32 bytesTotransfer, uint32& bytesTrasferred)
@@ -57,12 +60,6 @@ LONGLONG FileReader::getFileSize()
     return size.QuadPart;
 }
 
-void FileReader::reduceOffset(uint32 reduction)
-{
-    this->offset_overall -= reduction;
-    this->offset_current_read -= reduction;
-}
-
 void FileReader::readFile(char* filename, LPVOID buffer, OVERLAPPED& ol, uint32& dwBytesRead, uint32 bufferSize) {
     if (DEBUG)
     {
@@ -80,7 +77,7 @@ void FileReader::readFile(char* filename, LPVOID buffer, OVERLAPPED& ol, uint32&
     dwBytesRead = ol.InternalHigh;
 }
 
-HANDLE FileReader::getFileHandle()
+void FileReader::getFileHandle()
 {
     HANDLE hFile = CreateFile(this->filename,               // file to open
         GENERIC_READ,          // open for reading
@@ -105,5 +102,12 @@ HANDLE FileReader::getFileHandle()
         }
     }
 
-    return hFile;
+    this->FileHandleOpen = true;
+    this->hFile = hFile;
+}
+
+void FileReader::CloseFileHandle()
+{
+    CloseHandle(this->hFile);
+    this->FileHandleOpen = false;
 }

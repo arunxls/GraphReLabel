@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <algorithm>
 #include "RenamedGraphMerge.h"
 
 template <typename T>
@@ -23,7 +24,7 @@ void RenamedGraphMerge<T>::execute()
 {
     uint32 buffer = this->buffer_size;
     
-    buffer -= std::min(MERGE_WAY, this->output_files->size()) * GRAPH_READ_BUFFER*_1_MB;
+    buffer -= std::min<int>(MERGE_WAY, this->output_files->size()) * GRAPH_READ_BUFFER*_1_MB;
     
     char* buffer_start = new char[buffer];
     char* buffer_end = buffer_start + buffer;
@@ -34,6 +35,7 @@ void RenamedGraphMerge<T>::execute()
     {
         char* files[MERGE_WAY];
         GraphReader<T, uint32>* graph[MERGE_WAY];
+        this->readers.clear();
         for (int i = 0; i < MERGE_WAY; ++i)
         {
             files[i] = NULL;
@@ -46,13 +48,12 @@ void RenamedGraphMerge<T>::execute()
             graph[i] = NULL;
             if (files[i] != NULL)
             {
-                graph[i] = new GraphReader<T, uint32>(files[i]);
+                graph[i] = new GraphReader<T, uint32>(files[i], &this->readers);
                 graph[i]->load();
             }
         }
 
         char* output = getNewOutputFile();
-        FileWriter FW(output);
 
         while (this->has_next(graph)) 
         {
@@ -62,10 +63,10 @@ void RenamedGraphMerge<T>::execute()
                 min = twoWayCompare(min, graph[i]);
             }
 
-            put(buffer_start, buffer_end, start, prev, min, FW);
+            put(buffer_start, buffer_end, start, prev, min, output);
         }
 
-        this->writeToDisk(buffer_start, start, prev, FW);
+        this->writeToDisk(buffer_start, start, prev, output);
         this->output_files->push_back(output);
 
         //this->total_read = this->read_1->total_read + this->read_2->total_read + this->write_merged->total_read;
@@ -86,7 +87,7 @@ void RenamedGraphMerge<T>::execute()
 }
 
 template<typename T>
-void RenamedGraphMerge<T>::put(char *& buffer_start, char*& buffer_end, char *& start, char*& prev, GraphReader<T, uint32>* graph, FileWriter & FW)
+void RenamedGraphMerge<T>::put(char *& buffer_start, char*& buffer_end, char *& start, char*& prev, GraphReader<T, uint32>* graph, char*& output)
 {
     HeaderGraph<T, uint32> h = graph->currentHeader();
     uint32 sizeToCopy = sizeof(HeaderGraph<T, uint32>) + h.len*sizeof(uint32);
@@ -94,7 +95,7 @@ void RenamedGraphMerge<T>::put(char *& buffer_start, char*& buffer_end, char *& 
     //printf("%I64u - %I32u\n", h.hash, h.len);
     if (start + sizeToCopy >= buffer_end)
     {
-        this->writeToDisk(buffer_start, start, prev, FW);
+        this->writeToDisk(buffer_start, start, prev, output);
     }
 
     if (start == buffer_start)
@@ -119,11 +120,16 @@ void RenamedGraphMerge<T>::put(char *& buffer_start, char*& buffer_end, char *& 
 }
 
 template<typename T>
-void RenamedGraphMerge<T>::writeToDisk(char *& buffer_start, char *& start, char*& prev, FileWriter & FW)
+void RenamedGraphMerge<T>::writeToDisk(char *& buffer_start, char *& start, char*& prev, char*& output)
 {
-    FW.write(buffer_start, (start - buffer_start));
-    start = buffer_start;
-    prev = start;
+    WaitForSingleObject(gWriteFileSemaphone, INFINITE);
+    {
+        FileWriter FW(output);
+        FW.write(buffer_start, (start - buffer_start));
+        start = buffer_start;
+        prev = start;
+    }
+    ReleaseSemaphore(gWriteFileSemaphone, 1, NULL);
 }
 
 template<typename T>

@@ -21,10 +21,10 @@ public:
     void read(LPVOID buffer, uint32 bytesTotransfer, uint32& bytesTrasferred);
     bool has_next();
     LONGLONG getFileSize();
-    void reduceOffset(uint32);
-
+    void getFileHandle();
+    void CloseFileHandle();
 private:
+    bool FileHandleOpen;
     void readFile(char*, LPVOID, OVERLAPPED&, uint32&, uint32);
-    HANDLE getFileHandle();
 };
 

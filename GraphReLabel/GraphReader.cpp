@@ -11,11 +11,42 @@ GraphReader<T1, T2>::GraphReader(char * file_name)
     uint32 extra_buffer = sizeof(HeaderGraph<T1, T2>);
     
     this->alloc_start = new char[GRAPH_READ_BUFFER*_1_MB + extra_buffer];
-
+    this->readers = NULL;
     
     this->buffer_start = this->alloc_start + extra_buffer;
     this->buffer_end = this->buffer_start + GRAPH_READ_BUFFER*_1_MB;
     
+    this->start = this->buffer_start;
+    this->end = this->buffer_start;
+}
+
+template <typename T1, typename T2>
+GraphReader<T1, T2>::GraphReader(char * file_name, std::unordered_set<GraphReader<T1, uint32>*>* readers)
+{
+    this->createNodeHash = createNodeHash;
+    this->readers = readers;
+    if (readers->size() < 2)
+    {
+        readers->insert(this);
+    }
+    else
+    {
+        void *a = this;
+        (*(readers->begin()))->FR->CloseFileHandle();
+        readers->erase(readers->begin());
+        readers->insert((GraphReader<T1, uint32>*) a);
+    }
+    this->FR = new FileReader(file_name);
+
+    //Save some extra buffer space for partial reads
+    uint32 extra_buffer = sizeof(HeaderGraph<T1, T2>);
+
+    this->alloc_start = new char[GRAPH_READ_BUFFER*_1_MB + extra_buffer];
+
+
+    this->buffer_start = this->alloc_start + extra_buffer;
+    this->buffer_end = this->buffer_start + GRAPH_READ_BUFFER*_1_MB;
+
     this->start = this->buffer_start;
     this->end = this->buffer_start;
 }
@@ -93,9 +124,26 @@ uint32 GraphReader<T1, T2>::remainingBuffer()
 template<typename T1, typename T2>
 void GraphReader<T1, T2>::load()
 {
+    if (readers != NULL)
+    {
+        this->removeAndInsertReader();
+    }
     uint32 bytesTransferred = 0;
     this->FR->read(this->buffer_start, this->buffer_end - this->buffer_start, bytesTransferred);
     this->end = this->buffer_start + bytesTransferred;
+}
+
+template<typename T1, typename T2>
+void GraphReader<T1, T2>::removeAndInsertReader()
+{
+    void* a = this;
+    if (readers->find((GraphReader<T1, uint32>*) a) == readers->end())
+    {
+        (*(readers->begin()))->FR->CloseFileHandle();
+        readers->erase(readers->begin());
+        this->FR->getFileHandle();
+        readers->insert((GraphReader<T1, uint32>*) a);
+    }
 }
 
 template<typename T1, typename T2>

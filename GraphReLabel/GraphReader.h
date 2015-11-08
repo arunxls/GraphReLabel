@@ -2,6 +2,7 @@
 
 #include "include.h"
 #include "FileReader.h"
+#include <unordered_set>
 
 #define GRAPH_READ_BUFFER 16
 
@@ -18,6 +19,7 @@ public:
     FileReader* FR;
 
     GraphReader(char * file_name);
+    GraphReader(char * file_name, std::unordered_set<GraphReader<T1, uint32>*>* readers);
     GraphReader();
     ~GraphReader();
 
@@ -31,6 +33,8 @@ public:
     void copyRange(char*& dst);
     void load();
 private:
+    std::unordered_set<GraphReader<T1, uint32>*> *readers;
     char* alloc_start;
+    void removeAndInsertReader();
 };
 
