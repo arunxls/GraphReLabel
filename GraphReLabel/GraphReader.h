@@ -15,6 +15,9 @@ public:
     char* start;
     char* end;
 
+    uint64 total_read;
+    uint64 total_write;
+
     bool createNodeHash;
     FileReader* FR;
 

@@ -33,6 +33,10 @@ void InvertAndRelabelNodes<T>::getRenamed(uint64& element, uint32& currentRename
         nodeHash->put(element);
         currentRenameCount++;
     }
+    else 
+    {
+        currentRenameCount = nodeHash->get(element);
+    }
 }
 
 template<typename T>
@@ -47,15 +51,14 @@ DWORD InvertAndRelabelNodes<T>::mergeExecute(LPVOID data)
 template<typename T>
 void InvertAndRelabelNodes<T>::split()
 {
+    //getNewOutputFile();
+
     uint32 buffer_size = this->buffer;
     GraphReader<uint64, T> graph(file_name);
     buffer_size -= graph.size();
 
-    OriginalNodeHash* nodeHash = NULL;
-    if (this->createNodeHash) {
-        nodeHash = new OriginalNodeHash();
-        buffer_size -= nodeHash->size();
-    }
+    OriginalNodeHash* nodeHash = this->createNodeHash ? new OriginalNodeHash() : new OriginalNodeHash(this->nodesHash);
+    buffer_size -= nodeHash->size();
 
     RenamedGraphManager<T> renamedGraphManager(buffer_size);
     
@@ -73,10 +76,21 @@ void InvertAndRelabelNodes<T>::split()
     }
 
     renamedGraphManager.writeToDisk();
-    nodeHash->writeToDisk();
+
+    this->total_read += renamedGraphManager.total_read + graph.total_read;
+    this->total_write += renamedGraphManager.total_write + graph.total_write;
 
     this->output_files = std::move(renamedGraphManager.output_files);
-    this->nodesHash = nodeHash->FW->filename;
+    
+    if (this->createNodeHash)
+    {
+        nodeHash->writeToDisk();
+        this->nodesHash = nodeHash->FW->filename;
+    }
+    this->total_read += nodeHash->total_read;
+    this->total_write += nodeHash->total_write;
+        
+    delete nodeHash;
 }
 
 template<typename T>
@@ -122,6 +136,8 @@ void InvertAndRelabelNodes<T>::merge()
         // Close all thread handles.
         for (int i = 0; i < 2; ++i)
         {
+            this->total_read += merge[i]->total_read;
+            this->total_write += merge[i]->total_write;
             CloseHandle(hThreadArray[i]);
         }
 
@@ -130,8 +146,9 @@ void InvertAndRelabelNodes<T>::merge()
     this->output_files.push_back(output_files1[0]);
     RenamedGraphMerge<T> m(&this->output_files, this->buffer);
     m.execute();
-    //this->total_read += merge.total_read;
-    //this->total_write += merge.total_write;
+
+    this->total_read += m.total_read;
+    this->total_write += m.total_write;
 
     return;
 

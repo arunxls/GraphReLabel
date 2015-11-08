@@ -4,6 +4,9 @@
 template <typename T1, typename T2>
 GraphReader<T1, T2>::GraphReader(char * file_name) 
 {
+    this->total_read = 0;
+    this->total_write = 0;
+
     this->createNodeHash = createNodeHash;
     this->FR = new FileReader(file_name);
 
@@ -23,6 +26,9 @@ GraphReader<T1, T2>::GraphReader(char * file_name)
 template <typename T1, typename T2>
 GraphReader<T1, T2>::GraphReader(char * file_name, std::unordered_set<GraphReader<T1, uint32>*>* readers)
 {
+    this->total_read = 0;
+    this->total_write = 0;
+
     this->createNodeHash = createNodeHash;
     this->readers = readers;
     if (readers->size() < 2)
@@ -54,6 +60,8 @@ GraphReader<T1, T2>::GraphReader(char * file_name, std::unordered_set<GraphReade
 template <typename T1, typename T2>
 GraphReader<T1, T2>::GraphReader()
 {
+    this->total_read = 0;
+    this->total_write = 0;
 }
 
 template <typename T1, typename T2>
@@ -131,6 +139,7 @@ void GraphReader<T1, T2>::load()
     uint32 bytesTransferred = 0;
     this->FR->read(this->buffer_start, this->buffer_end - this->buffer_start, bytesTransferred);
     this->end = this->buffer_start + bytesTransferred;
+    this->total_read += bytesTransferred;
 }
 
 template<typename T1, typename T2>

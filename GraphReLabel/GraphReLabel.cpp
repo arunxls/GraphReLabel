@@ -30,33 +30,42 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
 
     clock_t begin, end;
 
-    printf("Starting split phase\n");
-    std::deque<std::string> files;
+    printf("Starting 1st Inversion\n");
 
+    char* outputFile;
+    char* nodeHash;
     std::chrono::high_resolution_clock::time_point b1 = std::chrono::high_resolution_clock::now();
     {
         InvertAndRelabelNodes<uint64> graph(argv[1], BUFFERSIZE * _1_MB, true);
         graph.execute();
+
+        outputFile = graph.output_files[0];
+        nodeHash = graph.nodesHash;
+        
         printf("Total IO: read - %.2f GB; write - %.2f GB\n", (float)graph.total_read / _1_GB, (float)graph.total_write / _1_GB);
         total_read += graph.total_read;
         total_write += graph.total_write;
     }
     std::chrono::high_resolution_clock::time_point e1 = std::chrono::high_resolution_clock::now();
     printf("Took %lld seconds\n", std::chrono::duration_cast<std::chrono::seconds>(e1 - b1).count());
-    printf("Generated %d files\n", files.size());
-    printf("Ending split phase\n");
+    printf("Ending 1st Inversion\n");
 
-    /*std::chrono::high_resolution_clock::time_point b2 = std::chrono::high_resolution_clock::now();
+    printf("\nStarting 2nd Inversion\n");
+
+    std::chrono::high_resolution_clock::time_point b2 = std::chrono::high_resolution_clock::now();
     {
-        char* tmp = "tmp128";
-        InvertAndRelabelNodes<uint32> graph(tmp, BUFFERSIZE * _1_MB, false);
+        nodeHash = "tmp1";
+        outputFile = "tmp84";
+
+        InvertAndRelabelNodes<uint32> graph(outputFile, BUFFERSIZE * _1_MB, false);
+        graph.nodesHash = nodeHash;
         graph.execute();
         printf("Total IO: read - %.2f GB; write - %.2f GB\n", (float)graph.total_read / _1_GB, (float)graph.total_write / _1_GB);
         total_read += graph.total_read;
         total_write += graph.total_write;
     }
 
-    printf("\n");*/
+    printf("\n");
 
     printf("Overall stats - RunTime: %lld seconds; Total read %.2f GB; Total write %.2f GB\n",
         std::chrono::duration_cast<std::chrono::seconds>(e1 - b1).count(),

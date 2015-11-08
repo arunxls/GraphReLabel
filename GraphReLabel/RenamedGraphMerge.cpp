@@ -5,11 +5,16 @@
 template <typename T>
 RenamedGraphMerge<T>::RenamedGraphMerge()
 {
+    this->total_read = 0;
+    this->total_write = 0;
 }
 
 template <typename T>
 RenamedGraphMerge<T>::RenamedGraphMerge(std::deque<char*>* output_files, uint32 buffer)
 {
+    this->total_read = 0;
+    this->total_write = 0;
+
     this->output_files = output_files;
     this->buffer_size = buffer;
 }
@@ -69,13 +74,11 @@ void RenamedGraphMerge<T>::execute()
         this->writeToDisk(buffer_start, start, prev, output);
         this->output_files->push_back(output);
 
-        //this->total_read = this->read_1->total_read + this->read_2->total_read + this->write_merged->total_read;
-        //this->total_write = this->read_1->total_write + this->read_2->total_write + this->write_merged->total_write;
-
         for (int i = 0; i < MERGE_WAY; ++i) 
         {
             if (graph[i] != NULL)
             {
+                this->total_read += graph[i]->total_read;
                 delete graph[i];
                 DeleteFile(TEXT(files[i]));
             }
@@ -126,6 +129,7 @@ void RenamedGraphMerge<T>::writeToDisk(char *& buffer_start, char *& start, char
     {
         FileWriter FW(output);
         FW.write(buffer_start, (start - buffer_start));
+        this->total_write += (start - buffer_start);
         start = buffer_start;
         prev = start;
     }

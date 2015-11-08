@@ -4,6 +4,7 @@
 #include "RenamedGraph.cpp"
 #include "utils.h"
 #include "FileWriter.h"
+#include <algorithm>
 
 template<typename T>
 RenamedGraphManager<T>::RenamedGraphManager(uint32 buffer_size)
@@ -67,16 +68,18 @@ void RenamedGraphManager<T>::put(uint32 renamed, T original)
 
     //Get top 3 bits
     int key = original  >> 61;
+
+    //int key = std::min<int>(original / (86533762 / RENAME_BUCKETS), RENAME_BUCKETS - 1);
     //key = key % RENAME_BUCKETS;
     RenamedGraph<T>* targetBucket = (this->bucket + key);
     if (targetBucket->hasNext()) {
         targetBucket->put(&tmp);
     }
     else {
-        /*for (int i = 0; i < RENAME_BUCKETS; i++) {
-            RenamedGraph<T>* tmp = (this->bucket + i);
-            printf("%d - %d\n", i, (tmp->start - tmp->buffer_start) / sizeof(RenamedHeaderGraph<T>));
-        }*/
+        //for (int i = 0; i < RENAME_BUCKETS; i++) {
+        //    RenamedGraph<T>* tmp = (this->bucket + i);
+        //    printf("%d - %d\n", i, (tmp->start - tmp->buffer_start) / sizeof(RenamedHeaderGraph<T>));
+        //}
         //
         //for (int i = 0; i < RENAME_BUCKETS; i++) {
         //    RenamedGraph<T>* tmp = (this->bucket + i);
@@ -120,6 +123,7 @@ void RenamedGraphManager<T>::writeToDisk()
     for (int i = 0; i < RENAME_BUCKETS; ++i)
     {
         FW.write((this->bucket + i)->buffer_start, (this->bucket + i)->start - (this->bucket + i)->buffer_start);
+        this->total_write += (this->bucket + i)->start - (this->bucket + i)->buffer_start;
         (this->bucket + i)->start = (this->bucket + i)->buffer_start;
     }
 }

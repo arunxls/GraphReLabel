@@ -14,6 +14,9 @@ public:
     std::deque<char*>* output_files;
     uint32 buffer_size;
 
+    uint64 total_read;
+    uint64 total_write;
+
     RenamedGraphMerge();
     RenamedGraphMerge(std::deque<char*>*, uint32 buffer);
     ~RenamedGraphMerge();

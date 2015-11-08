@@ -2,8 +2,10 @@
 
 #include "include.h"
 #include "FileWriter.h"
+#include "FileReader.h"
 
-#define ORIGINAL_NODE_HASH 2
+#define ORIGINAL_NODE_HASH_WRITER 2
+#define ORIGINAL_NODE_HASH_READER 8
 
 class OriginalNodeHash
 {
@@ -15,15 +17,22 @@ public:
 
     uint64 total_read;
     uint64 total_write;
-
+    
+    FileReader* FR;
     FileWriter* FW;
 
+    OriginalNodeHash(char* file_name);
     OriginalNodeHash();
     ~OriginalNodeHash();
 
     void put(uint64 element);
+    uint32 get(uint64 element);
     void writeToDisk();
 
-    uint32 size() { return ORIGINAL_NODE_HASH * _1_MB; }
+    uint32 size() { return this->buffer_end - this->buffer_start; }
+private:
+    void load();
+    uint32 position;
+    uint32 overshoot;
 };
 
