@@ -3,7 +3,7 @@
 #include "include.h"
 #include "FileReader.h"
 
-#define GRAPH_READ_BUFFER 32
+#define GRAPH_READ_BUFFER 16
 
 template <typename T1, typename T2>
 class GraphReader
@@ -28,7 +28,7 @@ public:
     void nextHeader();
     void nextNeighbour();
     uint32 remainingBuffer();
-    void copyRange(char* dst);
+    void copyRange(char*& dst);
     void load();
 private:
     char* alloc_start;

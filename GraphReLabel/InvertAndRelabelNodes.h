@@ -24,6 +24,7 @@ public:
 
     void execute();
     void getRenamed(uint64& element, uint32& currentRenameCount, OriginalNodeHash*);
+    static DWORD WINAPI InvertAndRelabelNodes<T>::mergeExecute(LPVOID data);
 private:
     void split();
     void merge();

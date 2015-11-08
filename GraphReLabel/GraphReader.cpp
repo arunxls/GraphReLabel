@@ -29,6 +29,7 @@ template <typename T1, typename T2>
 GraphReader<T1, T2>::~GraphReader()
 {
     delete[] this->alloc_start;
+    delete this->FR;
 }
 
 template<typename T1, typename T2>
@@ -98,12 +99,23 @@ void GraphReader<T1, T2>::load()
 }
 
 template<typename T1, typename T2>
-void GraphReader<T1, T2>::copyRange(char * dst)
+void GraphReader<T1, T2>::copyRange(char *& dst)
 {
-    this->start -= sizeof(HeaderGraph<T1, T2>);
-    uint32 sizeToCopy = this->currentHeader*sizeof(T2);
+    HeaderGraph<T1, T2> h = this->currentHeader();
+    uint32 sizeToCopy = h.len*sizeof(T2);
+    this->nextHeader();
     if (this->start + sizeToCopy > this->end)
     {
-        //memcopy(dst, )
+        uint32 partialSize = this->end - this->start;
+        
+        memcpy(dst, this->start, partialSize);
+        dst += partialSize;
+        sizeToCopy -= partialSize;
+        this->load();
+        this->start = this->buffer_start;
     }
+
+    memcpy(dst, this->start, sizeToCopy);
+    dst += sizeToCopy;
+    this->start += sizeToCopy;
 }

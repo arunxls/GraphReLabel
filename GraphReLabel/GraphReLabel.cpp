@@ -46,7 +46,17 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
     printf("Generated %d files\n", files.size());
     printf("Ending split phase\n");
 
-    printf("\n");
+    /*std::chrono::high_resolution_clock::time_point b2 = std::chrono::high_resolution_clock::now();
+    {
+        char* tmp = "tmp128";
+        InvertAndRelabelNodes<uint32> graph(tmp, BUFFERSIZE * _1_MB, false);
+        graph.execute();
+        printf("Total IO: read - %.2f GB; write - %.2f GB\n", (float)graph.total_read / _1_GB, (float)graph.total_write / _1_GB);
+        total_read += graph.total_read;
+        total_write += graph.total_write;
+    }
+
+    printf("\n");*/
 
     printf("Overall stats - RunTime: %lld seconds; Total read %.2f GB; Total write %.2f GB\n",
         std::chrono::duration_cast<std::chrono::seconds>(e1 - b1).count(),
