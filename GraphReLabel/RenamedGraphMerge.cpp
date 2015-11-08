@@ -93,7 +93,18 @@ template<typename T>
 void RenamedGraphMerge<T>::put(char *& buffer_start, char*& buffer_end, char *& start, char*& prev, GraphReader<T, uint32>* graph, char*& output)
 {
     HeaderGraph<T, uint32> h = graph->currentHeader();
-    uint32 sizeToCopy = sizeof(HeaderGraph<T, uint32>) + h.len*sizeof(uint32);
+
+    if (h.hash == 1991235594174) {
+        printf("LENGTH - %I32u\n", h.len);
+
+        //char* tmp2 = tmp + sizeof(HeaderGraph<uint64, T>);
+        //for (int i = 0; i < header.len; i++) {
+        //    printf("NEIGHBOUR - %I32u\n", *(uint32*)tmp2);
+        //    tmp2 += sizeof(uint32);
+        //}
+    }
+
+    uint32 sizeToCopy = h.size();
     
     //printf("%I64u - %I32u\n", h.hash, h.len);
     if (start + sizeToCopy >= buffer_end)
@@ -114,7 +125,9 @@ void RenamedGraphMerge<T>::put(char *& buffer_start, char*& buffer_end, char *& 
     }
     else 
     {
-        *((HeaderGraph<T, uint32>*) start) = h;
+        ((HeaderGraph<T, uint32>*) start)->hash = h.hash;
+        ((HeaderGraph<T, uint32>*) start)->len = h.len;
+
         prev = start;
         start += sizeof(HeaderGraph<T, uint32>);
     }

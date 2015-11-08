@@ -62,24 +62,27 @@ template<typename T>
 void RenamedGraphManager<T>::put(uint32 renamed, T original)
 {
     RenamedHeaderGraph<T> tmp;
-    tmp.renamed = renamed;
-    tmp.len = 1;
     tmp.old = original;
+    tmp.len = 1;
+    tmp.renamed = renamed;
 
     //Get top 3 bits
-    int key = original  >> 61;
+    //int key = original  >> 61;
 
-    //int key = std::min<int>(original / (86533762 / RENAME_BUCKETS), RENAME_BUCKETS - 1);
+    int key = original / (25950000 / RENAME_BUCKETS);
+    if (key > 7) {
+        printf("\n");
+    }
     //key = key % RENAME_BUCKETS;
     RenamedGraph<T>* targetBucket = (this->bucket + key);
     if (targetBucket->hasNext()) {
         targetBucket->put(&tmp);
     }
     else {
-        //for (int i = 0; i < RENAME_BUCKETS; i++) {
-        //    RenamedGraph<T>* tmp = (this->bucket + i);
-        //    printf("%d - %d\n", i, (tmp->start - tmp->buffer_start) / sizeof(RenamedHeaderGraph<T>));
-        //}
+        /*for (int i = 0; i < RENAME_BUCKETS; i++) {
+            RenamedGraph<T>* tmp = (this->bucket + i);
+            printf("%d - %d\n", i, (tmp->start - tmp->buffer_start) / sizeof(RenamedHeaderGraph<T>));
+        }*/
         //
         //for (int i = 0; i < RENAME_BUCKETS; i++) {
         //    RenamedGraph<T>* tmp = (this->bucket + i);
@@ -124,6 +127,24 @@ void RenamedGraphManager<T>::writeToDisk()
     {
         FW.write((this->bucket + i)->buffer_start, (this->bucket + i)->start - (this->bucket + i)->buffer_start);
         this->total_write += (this->bucket + i)->start - (this->bucket + i)->buffer_start;
+        
+        char* tmp = (this->bucket + i)->buffer_start;
+        while (tmp < (this->bucket + i)->start)
+        {
+            HeaderGraph<uint64, T> header = *(HeaderGraph<uint64, T>*) tmp;
+            if (header.hash == 1991235594174) {
+                printf("LENGTH - %I32u\n", header.len);
+
+                char* tmp2 = tmp + sizeof(HeaderGraph<uint64, T>);
+                for (int i = 0; i < header.len; i++) {
+                    printf("NEIGHBOUR - %I32u\n", *(uint32*)tmp2);
+                    tmp2 += sizeof(uint32);
+                }
+            }
+
+            tmp += header.size();
+        }
+        
         (this->bucket + i)->start = (this->bucket + i)->buffer_start;
     }
 }

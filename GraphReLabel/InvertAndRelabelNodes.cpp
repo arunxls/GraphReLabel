@@ -66,11 +66,15 @@ void InvertAndRelabelNodes<T>::split()
     graph.load();
     while (graph.has_next()) {
         HeaderGraph<uint64, T> header = graph.currentHeader();
+        
         this->getRenamed(header.hash, currentRenameCount, nodeHash);
         graph.nextHeader();
+        //printf("%I32u\n", currentRenameCount);
         while (header.len-- > 0)
         {
             renamedGraphManager.put(currentRenameCount, graph.currentNeighbour());
+            //printf("%I32u\n", graph.currentNeighbour());
+            //graph.currentNeighbour();
             graph.nextNeighbour();
         }
     }
@@ -96,10 +100,10 @@ void InvertAndRelabelNodes<T>::split()
 template<typename T>
 void InvertAndRelabelNodes<T>::merge()
 {
-    //getNewOutputFile();
-    //for (int i = 0; i < 62; i++) {
-    //    this->output_files.push_back(getNewOutputFile());
-    //}
+   /* getNewOutputFile();
+    for (int i = 0; i < 62; i++) {
+        this->output_files.push_back(getNewOutputFile());
+    }*/
 
     uint32 file_size = this->output_files.size() / 2;
 
