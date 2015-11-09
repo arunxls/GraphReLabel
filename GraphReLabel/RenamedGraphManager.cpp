@@ -16,6 +16,7 @@ RenamedGraphManager<T>::RenamedGraphManager(uint32 buffer_size)
         tmp->init(splitSize);
     }
 
+    this->rangeKey = 0;
     this->total_read = 0;
     this->total_write = 0;
     this->init_threads();
@@ -24,6 +25,7 @@ RenamedGraphManager<T>::RenamedGraphManager(uint32 buffer_size)
 template <typename T>
 RenamedGraphManager<T>::RenamedGraphManager()
 {
+    this->rangeKey = 0;
 }
 
 template <typename T>
@@ -66,24 +68,23 @@ void RenamedGraphManager<T>::put(uint32 renamed, T original)
     tmp.len = 1;
     tmp.renamed = renamed;
 
-    //Get top 3 bits
-    //int key = original  >> 61;
+    int key;
 
-    int key = original / (25950000 / RENAME_BUCKETS);
-    if (key > 7) {
-        printf("\n");
+    if (this->rangeKey != 0) 
+    {
+        key = original / ((this->rangeKey + RENAME_BUCKETS) / RENAME_BUCKETS);
     }
-    //key = key % RENAME_BUCKETS;
+    else 
+    {
+        //Get top 3 bits
+        key = original >> 61;
+    }
+    
     RenamedGraph<T>* targetBucket = (this->bucket + key);
     if (targetBucket->hasNext()) {
         targetBucket->put(&tmp);
     }
     else {
-        /*for (int i = 0; i < RENAME_BUCKETS; i++) {
-            RenamedGraph<T>* tmp = (this->bucket + i);
-            printf("%d - %d\n", i, (tmp->start - tmp->buffer_start) / sizeof(RenamedHeaderGraph<T>));
-        }*/
-        //
         //for (int i = 0; i < RENAME_BUCKETS; i++) {
         //    RenamedGraph<T>* tmp = (this->bucket + i);
         //    printf("%d - %d\n", i, (tmp->start - tmp->buffer_start) / sizeof(RenamedHeaderGraph<T>));
@@ -127,23 +128,6 @@ void RenamedGraphManager<T>::writeToDisk()
     {
         FW.write((this->bucket + i)->buffer_start, (this->bucket + i)->start - (this->bucket + i)->buffer_start);
         this->total_write += (this->bucket + i)->start - (this->bucket + i)->buffer_start;
-        
-        char* tmp = (this->bucket + i)->buffer_start;
-        while (tmp < (this->bucket + i)->start)
-        {
-            HeaderGraph<uint64, T> header = *(HeaderGraph<uint64, T>*) tmp;
-            if (header.hash == 1991235594174) {
-                printf("LENGTH - %I32u\n", header.len);
-
-                char* tmp2 = tmp + sizeof(HeaderGraph<uint64, T>);
-                for (int i = 0; i < header.len; i++) {
-                    printf("NEIGHBOUR - %I32u\n", *(uint32*)tmp2);
-                    tmp2 += sizeof(uint32);
-                }
-            }
-
-            tmp += header.size();
-        }
         
         (this->bucket + i)->start = (this->bucket + i)->buffer_start;
     }

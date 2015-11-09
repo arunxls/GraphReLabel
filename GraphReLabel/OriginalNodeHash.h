@@ -20,6 +20,8 @@ public:
     
     FileReader* FR;
     FileWriter* FW;
+    
+    uint32 overshoot;
 
     OriginalNodeHash(char* file_name);
     OriginalNodeHash();
@@ -33,6 +35,5 @@ public:
 private:
     void load();
     uint32 position;
-    uint32 overshoot;
 };
 

@@ -5,8 +5,8 @@
 
 #define RENAME_BUCKETS 8
 
-static HANDLE ghSortSemaphore = CreateSemaphore(NULL, 0, RENAME_BUCKETS, NULL);
-static HANDLE ghWriteSemaphore = CreateSemaphore(NULL, 0, RENAME_BUCKETS, NULL);
+static HANDLE ghSortSemaphore;
+static HANDLE ghWriteSemaphore;
 
 template <typename T>
 class RenamedGraphManager
@@ -16,6 +16,7 @@ public:
 
     uint64 total_write;
     uint64 total_read;
+    uint32 rangeKey;
 
     std::deque<char*> output_files;
 

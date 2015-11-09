@@ -7,6 +7,7 @@ RenamedGraphMerge<T>::RenamedGraphMerge()
 {
     this->total_read = 0;
     this->total_write = 0;
+    this->sortNeighbour = false;
 }
 
 template <typename T>
@@ -17,6 +18,7 @@ RenamedGraphMerge<T>::RenamedGraphMerge(std::deque<char*>* output_files, uint32 
 
     this->output_files = output_files;
     this->buffer_size = buffer;
+    this->sortNeighbour = false;
 }
 
 template <typename T>
@@ -27,6 +29,22 @@ RenamedGraphMerge<T>::~RenamedGraphMerge()
 template <typename T>
 void RenamedGraphMerge<T>::execute()
 {
+    //DWORD   dwThreadIdArray[SORT_THREADS];
+    //HANDLE  hThreadArray[SORT_THREADS];
+    //
+    //if (this->sortNeighbour)
+    //{
+    //    for (int i = 0; i < SORT_THREADS; ++i) {
+    //        hThreadArray[i] = CreateThread(
+    //            NULL,                   // default security attributes
+    //            0,                      // use default stack size  
+    //            sortList,         // thread function name
+    //            &this->sortOffsets,  // argument to thread function 
+    //            0,                      // use default creation flags 
+    //            &dwThreadIdArray[i]);   // returns the thread identifier
+    //    }
+    //}
+
     uint32 buffer = this->buffer_size;
     
     buffer -= std::min<int>(MERGE_WAY, this->output_files->size()) * GRAPH_READ_BUFFER*_1_MB;
@@ -58,7 +76,13 @@ void RenamedGraphMerge<T>::execute()
             }
         }
 
-        char* output = getNewOutputFile();
+        char* output;
+        if (this->sortNeighbour) {
+            output = getNewOutputFile();
+        }
+        else {
+            output = "PLD-out-relabeled.dat";
+        }
 
         while (this->has_next(graph)) 
         {
@@ -71,8 +95,15 @@ void RenamedGraphMerge<T>::execute()
             put(buffer_start, buffer_end, start, prev, min, output);
         }
 
+        this->sortAdjacencyList(prev, start);
         this->writeToDisk(buffer_start, start, prev, output);
         this->output_files->push_back(output);
+
+        //for (int i = 0; i < SORT_THREADS; ++i)
+        //{
+        //    CloseHandle(hThreadArray[i]);
+        //}
+
 
         for (int i = 0; i < MERGE_WAY; ++i) 
         {
@@ -93,16 +124,6 @@ template<typename T>
 void RenamedGraphMerge<T>::put(char *& buffer_start, char*& buffer_end, char *& start, char*& prev, GraphReader<T, uint32>* graph, char*& output)
 {
     HeaderGraph<T, uint32> h = graph->currentHeader();
-
-    if (h.hash == 1991235594174) {
-        printf("LENGTH - %I32u\n", h.len);
-
-        //char* tmp2 = tmp + sizeof(HeaderGraph<uint64, T>);
-        //for (int i = 0; i < header.len; i++) {
-        //    printf("NEIGHBOUR - %I32u\n", *(uint32*)tmp2);
-        //    tmp2 += sizeof(uint32);
-        //}
-    }
 
     uint32 sizeToCopy = h.size();
     
@@ -125,6 +146,8 @@ void RenamedGraphMerge<T>::put(char *& buffer_start, char*& buffer_end, char *& 
     }
     else 
     {
+        this->sortAdjacencyList(prev, start);
+     
         ((HeaderGraph<T, uint32>*) start)->hash = h.hash;
         ((HeaderGraph<T, uint32>*) start)->len = h.len;
 
@@ -189,3 +212,71 @@ bool RenamedGraphMerge<T>::has_next(GraphReader<T, uint32>* graph[])
     return false;
 }
 
+template<typename T>
+DWORD RenamedGraphMerge<T>::sortList(LPVOID data)
+{
+    Sleep(500);
+    std::deque<std::pair<uint32*, uint32*>>* sortOffsets = (std::deque<std::pair<uint32*, uint32*>>*) data;
+    DWORD dwWaitResult;
+    while (1)
+    {
+        if (sortOffsets->size() != 0)
+        {
+            dwWaitResult = WaitForSingleObject(gNeighbourSortSemaphore, 0);
+            if (dwWaitResult == WAIT_OBJECT_0) {
+                if (sortOffsets->size() != 0) {
+                    printf("HERE1!");
+                    std::pair<uint32*, uint32*> bounds = sortOffsets->front();
+                    printf("HERE2!");
+                    sortOffsets->pop_front();
+
+                    bool flag = ReleaseSemaphore(gNeighbourSortSemaphore, 1, NULL);
+                    if (DEBUG && !flag)
+                    {
+                        DisplayError(TEXT("SetEvent"));
+                    }
+
+                    uint32* start = bounds.first;
+                    uint32* end = bounds.second;
+
+                    std::sort(start, end);
+                    printf("SORTED %d %p, %p\n", sortOffsets->size(), start, end);
+                    //delete[] bounds;
+                }
+                else {
+                    Sleep(100);
+                }
+            }
+            else {
+                ReleaseSemaphore(gNeighbourSortSemaphore, 1, NULL);
+            }
+        }
+        //printf("!!SORTED %d\n", sortOffsets->size());
+    }
+    
+    return 0;
+}
+
+template<typename T>
+void RenamedGraphMerge<T>::sortAdjacencyList(char * prev, char * start)
+{
+    std::pair<uint32*, uint32*> foo;
+    foo.first = (uint32*)(prev + sizeof(HeaderGraph<T, uint32>));
+    foo.second = (uint32*)start;
+
+    //std::sort(foo.first, foo.second);
+
+    //while (true) {
+    //    if (this->sortOffsets.size() < 10000)
+    //    {
+    //        //printf("INSERT!\n");
+    //        WaitForSingleObject(gNeighbourSortSemaphore, INFINITY);
+    //        this->sortOffsets.emplace_back(foo);
+    //        ReleaseSemaphore(gNeighbourSortSemaphore, 1, NULL);
+    //        return;
+    //    }
+    //    else {
+    //        //printf("FULL!\n");
+    //    }
+    //}
+}
