@@ -48,7 +48,7 @@ void DisplayError(LPTSTR lpszFunction)
 char* getNewOutputFile() {
     WaitForSingleObject(gOutputFileSemaphone, INFINITE);
     char* file_name = new char[7]; //Assume 6 char filename and 1 for null termination
-    sprintf(file_name, "foo%d", ++fileCount);
+    sprintf(file_name, "tmp%d", ++fileCount);
     ReleaseSemaphore(gOutputFileSemaphone, 1, NULL);
     return file_name;
 }

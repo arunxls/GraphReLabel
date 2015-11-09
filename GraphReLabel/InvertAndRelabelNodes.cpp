@@ -34,7 +34,7 @@ InvertAndRelabelNodes<T>::~InvertAndRelabelNodes()
 template <typename T>
 void InvertAndRelabelNodes<T>::execute()
 {
-    //this->split();
+    this->split();
     this->merge();
 }
 
@@ -122,53 +122,57 @@ void InvertAndRelabelNodes<T>::merge()
     uint32 file_size = this->output_files.size() / 2;
 
     std::deque<char*>output_files1;
-    //{    
-    //    RenamedGraphMerge<T>* merge[2];
-    //    for (int i = 0; i < file_size; ++i) {
-    //        output_files1.push_back(this->output_files.front());
-    //        this->output_files.pop_front();
-    //    }
+    {    
+        RenamedGraphMerge<T>* merge[2];
+        for (int i = 0; i < file_size; ++i) {
+            output_files1.push_back(this->output_files.front());
+            this->output_files.pop_front();
+        }
 
-    //    merge[0] = new RenamedGraphMerge<T>(&output_files1, this->buffer / 2);
-    //    merge[1] = new RenamedGraphMerge<T>(&this->output_files, this->buffer / 2);
+        merge[0] = new RenamedGraphMerge<T>(&output_files1, this->buffer / 2);
+        merge[1] = new RenamedGraphMerge<T>(&this->output_files, this->buffer / 2);
 
-    //    DWORD   dwThreadIdArray[2];
-    //    HANDLE  hThreadArray[2];
-    //    for (int i = 0; i < 2; ++i) {
-    //        hThreadArray[i] = CreateThread(
-    //            NULL,                   // default security attributes
-    //            0,                      // use default stack size  
-    //            mergeExecute,         // thread function name
-    //            (merge + i),  // argument to thread function 
-    //            0,                      // use default creation flags 
-    //            &dwThreadIdArray[i]);   // returns the thread identifier 
+        DWORD   dwThreadIdArray[2];
+        HANDLE  hThreadArray[2];
+        for (int i = 0; i < 2; ++i) {
+            hThreadArray[i] = CreateThread(
+                NULL,                   // default security attributes
+                0,                      // use default stack size  
+                mergeExecute,         // thread function name
+                (merge + i),  // argument to thread function 
+                0,                      // use default creation flags 
+                &dwThreadIdArray[i]);   // returns the thread identifier 
 
-    //        if (DEBUG && hThreadArray[i] == NULL)
-    //        {
-    //            ExitProcess(3);
-    //        }
-    //    }
+            if (DEBUG && hThreadArray[i] == NULL)
+            {
+                ExitProcess(3);
+            }
+        }
 
-    //    WaitForMultipleObjects(2, hThreadArray, TRUE, INFINITE);
+        WaitForMultipleObjects(2, hThreadArray, TRUE, INFINITE);
 
-    //    // Close all thread handles.
-    //    for (int i = 0; i < 2; ++i)
-    //    {
-    //        this->total_read += merge[i]->total_read;
-    //        this->total_write += merge[i]->total_write;
-    //        CloseHandle(hThreadArray[i]);
-    //    }
+        // Close all thread handles.
+        for (int i = 0; i < 2; ++i)
+        {
+            this->total_read += merge[i]->total_read;
+            this->total_write += merge[i]->total_write;
+            CloseHandle(hThreadArray[i]);
+        }
 
-    //    delete merge[0]; delete merge[1];
-    //}
-    //this->output_files.push_back(output_files1[0]);
+        delete merge[0]; delete merge[1];
+    }
+    this->output_files.push_back(output_files1[0]);
 
-    this->output_files.push_back("tmp146");
-    this->output_files.push_back("tmp147");
+    //this->output_files.push_back("tmp146");
+    //this->output_files.push_back("tmp147");
 
 
     RenamedGraphMerge<T> m(&this->output_files, this->buffer);
-    if (!this->createNodeHash) m.sortNeighbour = true;
+    if (!this->createNodeHash)
+    {
+        m.sortNeighbour = true;
+    }
+    
     m.execute();
 
     this->total_read += m.total_read;

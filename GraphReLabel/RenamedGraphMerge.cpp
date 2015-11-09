@@ -78,10 +78,10 @@ void RenamedGraphMerge<T>::execute()
 
         char* output;
         if (this->sortNeighbour) {
-            output = getNewOutputFile();
+            output = "PLD-out-relabeled.dat";
         }
         else {
-            output = "PLD-out-relabeled.dat";
+            output = getNewOutputFile();
         }
 
         while (this->has_next(graph)) 
@@ -103,7 +103,6 @@ void RenamedGraphMerge<T>::execute()
         //{
         //    CloseHandle(hThreadArray[i]);
         //}
-
 
         for (int i = 0; i < MERGE_WAY; ++i) 
         {

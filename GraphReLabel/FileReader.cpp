@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FileReader.h"
 #include "utils.h"
+#include <algorithm>
 
 VOID CALLBACK FileIOCompletionRoutine(
     __in  DWORD dwErrorCode,
@@ -48,6 +49,30 @@ void FileReader::read(LPVOID buffer, uint32 bytesTotransfer, uint32& bytesTrasfe
     return;
 }
 
+void FileReader::read_async(LPVOID buffer, uint32 bytesTotransfer, uint32 & bytesTrasferred)
+{
+    OVERLAPPED ol = { 0 };
+
+    ol.OffsetHigh = (uint32)(offset_overall >> 32);
+    ol.Offset = (uint32)offset_overall;
+    ol.hEvent = *(HANDLE*) this;
+
+    this->readFile_async(filename, buffer, ol, bytesTrasferred, bytesTotransfer);
+
+    bytesTrasferred = bytesTotransfer;
+    if (this->offset_overall + bytesTotransfer > this->size)
+    {
+        bytesTrasferred = this->size - this->offset_overall;
+    }
+
+    this->offset_current_read = bytesTrasferred;
+    this->offset_overall += bytesTrasferred;
+
+    printf("%I64u -- %I64u\n",this->size,  this->offset_overall);
+
+    return;
+}
+
 bool FileReader::has_next()
 {
     return this->offset_overall < this->size;
@@ -74,6 +99,24 @@ void FileReader::readFile(char* filename, LPVOID buffer, OVERLAPPED& ol, uint32&
         return;
     }
     SleepEx(5000, TRUE);
+    dwBytesRead = ol.InternalHigh;
+}
+
+void FileReader::readFile_async(char* filename, LPVOID buffer, OVERLAPPED& ol, uint32& dwBytesRead, uint32 bufferSize)
+{
+    if (DEBUG)
+    {
+        printf("Reading %s\n", filename);
+    }
+
+    bool flag = ReadFileEx(this->hFile, (char*)buffer, bufferSize, &ol, FileIOCompletionRoutine);
+    if (DEBUG && !flag)
+    {
+        //DisplayError(TEXT("ReadFile"));
+        printf("Terminal failure: Unable to read from file.\n GetLastError=%08x\n", GetLastError());
+        return;
+    }
+    //SleepEx(5000, TRUE);
     dwBytesRead = ol.InternalHigh;
 }
 

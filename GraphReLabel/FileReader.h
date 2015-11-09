@@ -19,6 +19,7 @@ public:
     ~FileReader();
 
     void read(LPVOID buffer, uint32 bytesTotransfer, uint32& bytesTrasferred);
+    void read_async(LPVOID buffer, uint32 bytesTotransfer, uint32& bytesTrasferred);
     bool has_next();
     LONGLONG getFileSize();
     void getFileHandle();
@@ -26,5 +27,6 @@ public:
 private:
     bool FileHandleOpen;
     void readFile(char*, LPVOID, OVERLAPPED&, uint32&, uint32);
+    void readFile_async(char*, LPVOID, OVERLAPPED&, uint32&, uint32);
 };
 

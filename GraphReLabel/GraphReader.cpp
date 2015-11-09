@@ -21,6 +21,7 @@ GraphReader<T1, T2>::GraphReader(char * file_name)
     
     this->start = this->buffer_start;
     this->end = this->buffer_start;
+    this->async = false;
 }
 
 template <typename T1, typename T2>
@@ -55,6 +56,30 @@ GraphReader<T1, T2>::GraphReader(char * file_name, std::unordered_set<GraphReade
 
     this->start = this->buffer_start;
     this->end = this->buffer_start;
+    this->async = false;
+}
+
+template<typename T1, typename T2>
+GraphReader<T1, T2>::GraphReader(char * file_name, int bufferSize)
+{
+    this->total_read = 0;
+    this->total_write = 0;
+
+    this->createNodeHash = createNodeHash;
+    this->FR = new FileReader(file_name);
+
+    //Save some extra buffer space for partial reads
+    uint32 extra_buffer = sizeof(HeaderGraph<T1, T2>);
+
+    this->alloc_start = new char[bufferSize*_1_MB + extra_buffer];
+    this->readers = NULL;
+
+    this->buffer_start = this->alloc_start + extra_buffer;
+    this->buffer_end = this->buffer_start + bufferSize*_1_MB;
+
+    this->start = this->buffer_start;
+    this->end = this->buffer_start;
+    this->async = true;
 }
 
 template <typename T1, typename T2>
@@ -137,7 +162,14 @@ void GraphReader<T1, T2>::load()
         this->removeAndInsertReader();
     }
     uint32 bytesTransferred = 0;
-    this->FR->read(this->buffer_start, this->buffer_end - this->buffer_start, bytesTransferred);
+    
+    if (this->async) {
+        this->FR->read_async(this->buffer_start, this->buffer_end - this->buffer_start, bytesTransferred);
+    }
+    else {
+        this->FR->read(this->buffer_start, this->buffer_end - this->buffer_start, bytesTransferred);
+    }
+    
     this->end = this->buffer_start + bytesTransferred;
     this->total_read += bytesTransferred;
 }

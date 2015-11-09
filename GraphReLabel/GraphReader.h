@@ -19,10 +19,12 @@ public:
     uint64 total_write;
 
     bool createNodeHash;
+    bool async;
     FileReader* FR;
 
     GraphReader(char * file_name);
     GraphReader(char * file_name, std::unordered_set<GraphReader<T1, uint32>*>* readers);
+    GraphReader(char * file_name, int bufferSize);
     GraphReader();
     ~GraphReader();
 
