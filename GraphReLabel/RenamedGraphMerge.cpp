@@ -95,7 +95,6 @@ void RenamedGraphMerge<T>::execute()
             put(buffer_start, buffer_end, start, prev, min, output);
         }
 
-        this->sortAdjacencyList(prev, start);
         this->writeToDisk(buffer_start, start, prev, output);
         this->output_files->push_back(output);
 
@@ -244,11 +243,13 @@ DWORD RenamedGraphMerge<T>::sortList(LPVOID data)
 template<typename T>
 void RenamedGraphMerge<T>::sortAdjacencyList(char * prev, char * start)
 {
-    std::pair<uint32*, uint32*> foo;
-    foo.first = (uint32*)(prev + sizeof(HeaderGraph<T, uint32>));
-    foo.second = (uint32*)start;
-
-    //std::sort(foo.first, foo.second);
+    
+    //std::pair<uint32*, uint32*> foo;
+    //foo.first = (uint32*)(prev + sizeof(HeaderGraph<T, uint32>));
+    //foo.second = (uint32*)start;
+    if (this->sortNeighbour) {
+        std::sort((uint32*)prev, (uint32*)start);
+    }
 
     //while (true) {
     //    if (this->sortOffsets.size() < 10000)
@@ -279,6 +280,7 @@ void RenamedGraphMerge<T>::compact(char*& buffer_start, char*& start)
             *prev += *current;
         }
         else {
+            this->sortAdjacencyList((char*)(prev+1), (((char*)prev) + prev_size));
             prev = (HeaderGraph<T, uint32>*) (((char*)prev) + prev_size);
             *prev = *current;
         }

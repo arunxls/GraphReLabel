@@ -81,12 +81,13 @@ void TopN::execute()
         queue.pop();
     }
 
+    printf("\nTOP 10 Node count\n\n");
     int index = 1;
     for (auto i = r_queue.rbegin(); i != r_queue.rend(); ++i) {
         printf("%d. %I32u %I32u\n", index++, (*i).second, (*i).first);
     }
 
-    printf("Total sum Y_i(Y_i-1)/2 = %I64u\n", deviation);
+    printf("\nTotal sum Y_i(Y_i-1)/2 = %I64u\n", deviation);
 
     this->total_read += this->graph->total_read;
 }
