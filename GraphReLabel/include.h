@@ -24,17 +24,18 @@ public:
     HeaderGraph<T1, T2>& operator+=(const HeaderGraph<T1, T2>& rhs)
     {
         uint32 tmp_len = rhs.len;
-        T2* dst = ((T2*)&this->len) + this->len + 1;
-        T2* src = (T2*)(&rhs + 1);
-        if (tmp_len > 0) {
-            memcpy(dst, src, tmp_len*sizeof(T2));
-        }
+        T2* dst = (T2*)(((char*) this) + this->size());
+        //T2* dst = ((T2*)&this->len) + this->len + 1;
+        T2* src = (T2*)((&rhs) + 1);
+        memcpy(dst, src, tmp_len*sizeof(T2));
+        
         this->len += tmp_len;
         return *this;
     }
 
-    uint32 size() {
-        return sizeof(HeaderGraph) + sizeof(T2)*this->len;
+    uint32 size() 
+    {
+        return sizeof(HeaderGraph<T1, T2>) + (sizeof(T2)*this->len);
     }
 
     HeaderGraph<T1, T2>& operator=(const HeaderGraph<T1, T2>& rhs)

@@ -15,7 +15,7 @@
 #include "GraphReader.h"
 #include "TopN.h"
 
-#define BUFFERSIZE 496
+#define BUFFERSIZE 2000
 
 //no except
 void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
@@ -39,10 +39,10 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
     std::chrono::high_resolution_clock::time_point b1 = std::chrono::high_resolution_clock::now();
     {
         InvertAndRelabelNodes<uint64> graph(argv[1], BUFFERSIZE * _1_MB, true);
-        /*graph.execute();
+        graph.execute();
 
         outputFile = graph.output_files[0];
-        nodeHash = graph.nodesHash;*/
+        nodeHash = graph.nodesHash;
         
         printf("Total IO: read - %.2f GB; write - %.2f GB\n", (float)graph.total_read / _1_GB, (float)graph.total_write / _1_GB);
         total_read += graph.total_read;
@@ -59,12 +59,12 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
         //nodeHash = "tmp1";
         //outputFile = "tmp84";
 
-        //InvertAndRelabelNodes<uint32> graph(outputFile, BUFFERSIZE * _1_MB, false);
-        //graph.nodesHash = nodeHash;
-        //graph.execute();
-        //printf("Total IO: read - %.2f GB; write - %.2f GB\n", (float)graph.total_read / _1_GB, (float)graph.total_write / _1_GB);
-        //total_read += graph.total_read;
-        //total_write += graph.total_write;
+        InvertAndRelabelNodes<uint32> graph(outputFile, BUFFERSIZE * _1_MB, false);
+        graph.nodesHash = nodeHash;
+        graph.execute();
+        printf("Total IO: read - %.2f GB; write - %.2f GB\n", (float)graph.total_read / _1_GB, (float)graph.total_write / _1_GB);
+        total_read += graph.total_read;
+        total_write += graph.total_write;
     }
     std::chrono::high_resolution_clock::time_point e2 = std::chrono::high_resolution_clock::now();
     printf("Took %lld seconds\n", std::chrono::duration_cast<std::chrono::seconds>(e2 - b2).count());
@@ -73,7 +73,6 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
     printf("\nStarting Top 10\n");
     std::chrono::high_resolution_clock::time_point b3 = std::chrono::high_resolution_clock::now();
     {
-        char* tmp = "foo64";
         TopN topN("PLD-out-relabeled.dat");
         topN.execute();
         printf("Total IO: read - %.2f GB; write - %.2f GB\n", (float)topN.total_read / _1_GB, (float)topN.total_write / _1_GB);
@@ -87,7 +86,7 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
     printf("\n");
 
     printf("Overall stats - RunTime: %lld seconds; Total read %.2f GB; Total write %.2f GB\n",
-        std::chrono::duration_cast<std::chrono::seconds>(e2 - b1).count(),
+        std::chrono::duration_cast<std::chrono::seconds>(e3 - b1).count(),
         (float)total_read / _1_GB, (float)total_write / _1_GB);
 
     {

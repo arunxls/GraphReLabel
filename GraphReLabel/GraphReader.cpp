@@ -164,7 +164,7 @@ void GraphReader<T1, T2>::load()
     uint32 bytesTransferred = 0;
     
     if (this->async) {
-        this->FR->read_async(this->buffer_start, this->buffer_end - this->buffer_start, bytesTransferred);
+        this->FR->read(this->buffer_start, this->buffer_end - this->buffer_start, bytesTransferred);
     }
     else {
         this->FR->read(this->buffer_start, this->buffer_end - this->buffer_start, bytesTransferred);

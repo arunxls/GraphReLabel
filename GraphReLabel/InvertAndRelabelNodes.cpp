@@ -78,11 +78,23 @@ void InvertAndRelabelNodes<T>::split()
 
     uint32 currentRenameCount = -1;
     graph.load();
+
+    uint64 arr[10] = { 17241455985643631736 , 15040513362894536091 , 12794724663295438264 ,
+        9683969992542737819, 10309175745610185985, 2298953363148657638, 123799218289990698,
+        10462241505985149360, 7043338335740977041, 12866726020938778333 };
+
+    int count = 0;
+
     while (graph.has_next()) {
         HeaderGraph<uint64, T> header = graph.currentHeader();
         
         this->getRenamed(header.hash, currentRenameCount, nodeHash);
         graph.nextHeader();
+        for (int i = 0; i < 10; ++i) {
+            if (header.hash == arr[i]) {
+                printf("%d> %I64u == %I32u\n",count++, arr[i], header.len);
+            }
+        }
         //printf("%I32u\n", currentRenameCount);
         while (header.len-- > 0)
         {

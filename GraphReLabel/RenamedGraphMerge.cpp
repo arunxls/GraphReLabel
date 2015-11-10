@@ -127,7 +127,7 @@ void RenamedGraphMerge<T>::put(char *& buffer_start, char*& buffer_end, char *& 
     uint32 sizeToCopy = h.size();
     
     //printf("%I64u - %I32u\n", h.hash, h.len);
-    if (start + sizeToCopy >= buffer_end)
+    if (start + sizeToCopy > buffer_end)
     {
         this->writeToDisk(buffer_start, start, prev, output);
     }
@@ -278,4 +278,9 @@ void RenamedGraphMerge<T>::sortAdjacencyList(char * prev, char * start)
     //        //printf("FULL!\n");
     //    }
     //}
+}
+
+template<typename T>
+void RenamedGraphMerge<T>::compact()
+{
 }
