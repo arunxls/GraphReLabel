@@ -38,7 +38,7 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
     char* nodeHash;
     std::chrono::high_resolution_clock::time_point b1 = std::chrono::high_resolution_clock::now();
     {
-        InvertAndRelabelNodes<uint64> graph(argv[1], BUFFERSIZE * _1_MB, true);
+        /*InvertAndRelabelNodes<uint64> graph(argv[1], BUFFERSIZE * _1_MB, true);
         graph.execute();
 
         outputFile = graph.output_files[0];
@@ -46,7 +46,7 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
         
         printf("Total IO: read - %.2f GB; write - %.2f GB\n", (float)graph.total_read / _1_GB, (float)graph.total_write / _1_GB);
         total_read += graph.total_read;
-        total_write += graph.total_write;
+        total_write += graph.total_write;*/
     }
     std::chrono::high_resolution_clock::time_point e1 = std::chrono::high_resolution_clock::now();
     printf("Took %lld seconds\n", std::chrono::duration_cast<std::chrono::seconds>(e1 - b1).count());
@@ -59,12 +59,12 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
         //nodeHash = "tmp1";
         //outputFile = "tmp84";
 
-        InvertAndRelabelNodes<uint32> graph(outputFile, BUFFERSIZE * _1_MB, false);
+        /*InvertAndRelabelNodes<uint32> graph(outputFile, BUFFERSIZE * _1_MB, false);
         graph.nodesHash = nodeHash;
         graph.execute();
         printf("Total IO: read - %.2f GB; write - %.2f GB\n", (float)graph.total_read / _1_GB, (float)graph.total_write / _1_GB);
         total_read += graph.total_read;
-        total_write += graph.total_write;
+        total_write += graph.total_write;*/
     }
     std::chrono::high_resolution_clock::time_point e2 = std::chrono::high_resolution_clock::now();
     printf("Took %lld seconds\n", std::chrono::duration_cast<std::chrono::seconds>(e2 - b2).count());

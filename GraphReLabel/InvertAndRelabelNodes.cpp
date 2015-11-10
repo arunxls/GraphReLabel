@@ -189,10 +189,6 @@ void InvertAndRelabelNodes<T>::merge()
     }
     this->output_files.push_back(output_files1[0]);
 
-    //this->output_files.push_back("tmp146");
-    //this->output_files.push_back("tmp147");
-
-
     RenamedGraphMerge<T> m(&this->output_files, this->buffer);
     if (!this->createNodeHash)
     {

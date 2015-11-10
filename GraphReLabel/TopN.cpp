@@ -53,44 +53,40 @@ void TopN::execute()
         }
     }
 
-    //std::partial_sort(count, count + bound - 9, count + bound+1);
-
-    //uint32 max = 0;
-    //std::vector<uint32> top;
-
-    //for (int i = bound - 9; i < bound + 1; ++i)
-    //{
-    //    printf("%I32u\n", count[i]);
-    //}
-
-    //int bound = 100;
-    //int count[100];
-    //for (int i = 0; i < bound; i++) {
-    //    count[i] = i;
-    //}
-
+    uint64 deviation = 0;
     std::priority_queue<std::pair<uint32, uint32>, std::vector<std::pair<uint32, uint32>>, comparator> queue;
     for (int i = 0; i < bound + 1; ++i)
     {
-        std::pair<uint32, uint32>p(count[i], i);
-        if (queue.size() == 10) {
-            std::pair<uint32, uint32>tmp = queue.top();
-            if (tmp.first < p.first) {
-                queue.pop();
+        if (count[i] > 0) {
+            
+            deviation += count[i] *(count[i] - 1) / 2;
+            
+            std::pair<uint32, uint32>p(count[i], i);
+            if (queue.size() == 10) {
+                std::pair<uint32, uint32>tmp = queue.top();
+                if (tmp.first < p.first) {
+                    queue.pop();
+                    queue.emplace(p);
+                }
+            }
+            else {
                 queue.emplace(p);
             }
         }
-        else {
-            queue.emplace(p);
-        }
     }
 
+    std::deque<std::pair<uint32, uint32>> r_queue;
     while (queue.size() > 0) {
-        printf("%I32u, %I32u\n", queue.top().first, queue.top().second);
+        r_queue.emplace_back(queue.top());
         queue.pop();
     }
 
-    printf("\n");
+    int index = 1;
+    for (auto i = r_queue.rbegin(); i != r_queue.rend(); ++i) {
+        printf("%d. %I32u %I32u\n", index++, (*i).second, (*i).first);
+    }
 
-    //printf("%I32u %I64\n", bound, max);
+    printf("Total sum Y_i(Y_i-1)/2 = %I64u\n", deviation);
+
+    this->total_read += this->graph->total_read;
 }
