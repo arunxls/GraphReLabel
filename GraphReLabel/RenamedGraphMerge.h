@@ -36,5 +36,5 @@ private:
     std::unordered_set<GraphReader<T, uint32>*> readers;
     static DWORD WINAPI RenamedGraphMerge<T>::sortList(LPVOID data);
     void sortAdjacencyList(char* prev, char* start);
-    void compact();
+    void compact(char*& buffer_start, char*& start);
 };

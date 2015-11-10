@@ -15,7 +15,7 @@
 #include "GraphReader.h"
 #include "TopN.h"
 
-#define BUFFERSIZE 2000
+#define BUFFERSIZE 496
 
 //no except
 void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
@@ -81,7 +81,7 @@ void __cdecl _tmain(int argc, TCHAR *argv[]) noexcept
     }
     std::chrono::high_resolution_clock::time_point e3 = std::chrono::high_resolution_clock::now();
     printf("Took %lld seconds\n", std::chrono::duration_cast<std::chrono::seconds>(e3 - b3).count());
-    printf("\nStarting Top 10\n");
+    printf("\Ending Top 10\n");
 
     printf("\n");
 

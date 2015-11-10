@@ -84,11 +84,23 @@ void InvertAndRelabelNodes<T>::split()
         10462241505985149360, 7043338335740977041, 12866726020938778333 };
 
     int count = 0;
-
+    int sum = 0;
+    uint64 prevHash = 0;
     while (graph.has_next()) {
+        sum++;
         HeaderGraph<uint64, T> header = graph.currentHeader();
+        if (prevHash > header.hash) {
+            printf("======%I32u\n", currentRenameCount);
+        }
+        
         
         this->getRenamed(header.hash, currentRenameCount, nodeHash);
+        
+        if (prevHash > header.hash) {
+            printf("======%I32u\n", currentRenameCount);
+        }
+
+        prevHash = header.hash;
         graph.nextHeader();
         for (int i = 0; i < 10; ++i) {
             if (header.hash == arr[i]) {
@@ -106,6 +118,8 @@ void InvertAndRelabelNodes<T>::split()
     }
 
     renamedGraphManager.writeToDisk();
+
+    printf("%d // %d\n", sum, currentRenameCount);
 
     this->total_read += renamedGraphManager.total_read + graph.total_read;
     this->total_write += renamedGraphManager.total_write + graph.total_write;

@@ -111,7 +111,7 @@ HeaderGraph<T1, T2> GraphReader<T1, T2>::currentHeader()
     {
         uint32 bytesToCopy = this->end - this->start;
         char* dst = this->buffer_start - bytesToCopy;
-        memcpy(dst, this->start, bytesToCopy);
+        memmove(dst, this->start, bytesToCopy);
         this->start = dst;
         this->load();
     }
@@ -128,7 +128,7 @@ T2 GraphReader<T1, T2>::currentNeighbour()
     {
         uint32 bytesToCopy = this->end - this->start;
         char* dst = this->buffer_start - bytesToCopy;
-        memcpy(dst, this->start, bytesToCopy);
+        memmove(dst, this->start, bytesToCopy);
         this->start = dst;
         this->load();
     }
@@ -197,14 +197,14 @@ void GraphReader<T1, T2>::copyRange(char *& dst)
     {
         uint32 partialSize = this->end - this->start;
         
-        memcpy(dst, this->start, partialSize);
+        memmove(dst, this->start, partialSize);
         dst += partialSize;
         sizeToCopy -= partialSize;
         this->load();
         this->start = this->buffer_start;
     }
 
-    memcpy(dst, this->start, sizeToCopy);
+    memmove(dst, this->start, sizeToCopy);
     dst += sizeToCopy;
     this->start += sizeToCopy;
 }

@@ -25,9 +25,8 @@ public:
     {
         uint32 tmp_len = rhs.len;
         T2* dst = (T2*)(((char*) this) + this->size());
-        //T2* dst = ((T2*)&this->len) + this->len + 1;
         T2* src = (T2*)((&rhs) + 1);
-        memcpy(dst, src, tmp_len*sizeof(T2));
+        memmove(dst, src, tmp_len*sizeof(T2));
         
         this->len += tmp_len;
         return *this;

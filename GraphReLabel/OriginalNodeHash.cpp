@@ -55,27 +55,28 @@ void OriginalNodeHash::put(uint64 element)
 
 uint32 OriginalNodeHash::get(uint64 element)
 {
-    if (this->start >= this->end) 
+    if (this->start >= this->end)
     {
         this->load();
     }
 
     while (element > *(uint64*)this->start) {
-        if (this->start >= this->end) 
+        this->start += sizeof(uint64);
+        this->position++;
+        
+        if (this->start >= this->end)
         {
             this->load();
         }
-        this->start += sizeof(uint64);
-        position++;
     }
 
     if (*(uint64*)this->start == element)
     {
-        return position++;
+        return this->position;
     }
     else 
     {
-        return overshoot++;
+        return ++this->overshoot;
     }
 }
 

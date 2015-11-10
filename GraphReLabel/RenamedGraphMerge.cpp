@@ -125,41 +125,26 @@ void RenamedGraphMerge<T>::put(char *& buffer_start, char*& buffer_end, char *& 
     HeaderGraph<T, uint32> h = graph->currentHeader();
 
     uint32 sizeToCopy = h.size();
-    
-    //printf("%I64u - %I32u\n", h.hash, h.len);
+
     if (start + sizeToCopy > buffer_end)
     {
         this->writeToDisk(buffer_start, start, prev, output);
     }
 
-    if (start == buffer_start)
-    {
-        ((HeaderGraph<T, uint32>*) start)->hash = h.hash;
-        ((HeaderGraph<T, uint32>*) start)->len = 0;
-        start += sizeof(HeaderGraph<T, uint32>);
-    }
+    ((HeaderGraph<T, uint32>*) start)->hash = h.hash;
+    ((HeaderGraph<T, uint32>*) start)->len = h.len;
 
-    if (*(HeaderGraph<T, uint32>*) prev == h) 
-    {
-        ((HeaderGraph<T, uint32>*) prev)->len += h.len;
-    }
-    else 
-    {
-        this->sortAdjacencyList(prev, start);
-     
-        ((HeaderGraph<T, uint32>*) start)->hash = h.hash;
-        ((HeaderGraph<T, uint32>*) start)->len = h.len;
-
-        prev = start;
-        start += sizeof(HeaderGraph<T, uint32>);
-    }
+    start += sizeof(HeaderGraph<T, uint32>);
 
     graph->copyRange(start);
+
+    return;
 }
 
 template<typename T>
 void RenamedGraphMerge<T>::writeToDisk(char *& buffer_start, char *& start, char*& prev, char*& output)
 {
+    this->compact(buffer_start, start);
     WaitForSingleObject(gWriteFileSemaphone, INFINITE);
     {
         FileWriter FW(output);
@@ -281,6 +266,25 @@ void RenamedGraphMerge<T>::sortAdjacencyList(char * prev, char * start)
 }
 
 template<typename T>
-void RenamedGraphMerge<T>::compact()
+void RenamedGraphMerge<T>::compact(char*& buffer_start, char*& start)
 {
+    HeaderGraph<T, uint32>* prev = (HeaderGraph<T, uint32>*) buffer_start;
+    HeaderGraph<T, uint32>* current = (HeaderGraph<T, uint32>*) (((char*)prev) + prev->size());
+    while ((char*)current < start)
+    {
+        uint32 current_size = current->size();
+        uint32 prev_size = prev->size();
+
+        if (*current == *prev) {
+            *prev += *current;
+        }
+        else {
+            prev = (HeaderGraph<T, uint32>*) (((char*)prev) + prev_size);
+            *prev = *current;
+        }
+
+        current = (HeaderGraph<T, uint32>*) (((char*)current) + current_size);
+    }
+
+    start = (char*)(((char*)prev) + prev->size());
 }
