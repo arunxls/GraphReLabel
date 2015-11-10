@@ -60,7 +60,9 @@ void RenamedGraph<T>::compact()
         }
         else {
             prev = (HeaderGraph<T, uint32>*) (((char*)prev) + prev_size);
-            *prev = *current;
+            if (prev != current) {
+                *prev = *current;
+            }
         }
 
         current = (HeaderGraph<T, uint32>*) (((char*)current) + current_size);

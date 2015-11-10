@@ -282,7 +282,9 @@ void RenamedGraphMerge<T>::compact(char*& buffer_start, char*& start)
         else {
             this->sortAdjacencyList((char*)(prev+1), (((char*)prev) + prev_size));
             prev = (HeaderGraph<T, uint32>*) (((char*)prev) + prev_size);
-            *prev = *current;
+            if (prev != current) {
+                *prev = *current;
+            }
         }
 
         current = (HeaderGraph<T, uint32>*) (((char*)current) + current_size);
