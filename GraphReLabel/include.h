@@ -24,6 +24,8 @@ public:
 
     HeaderGraph<T1, T2>& operator+=(const HeaderGraph<T1, T2>& rhs)
     {
+        if ((char*)this == (char*)&rhs) return *this;
+
         uint32 tmp_len = rhs.len;
         T2* dst = (T2*)(((char*) this) + this->size());
         T2* src = (T2*)((&rhs) + 1);
@@ -40,6 +42,7 @@ public:
 
     HeaderGraph<T1, T2>& operator=(const HeaderGraph<T1, T2>& rhs)
     {
+        if ((char*)this == (char*)&rhs) return *this;
         hash = rhs.hash;
         len = 0;
         
